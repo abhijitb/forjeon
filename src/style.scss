@@ -1,0 +1,298 @@
+/**
+ * Forjeon - Advanced Typography Controls
+ * Main stylesheet for typography control components
+ */
+
+// Import WordPress design system variables
+@import "@wordpress/base-styles/colors";
+@import "@wordpress/base-styles/variables";
+@import "@wordpress/base-styles/mixins";
+
+// Forjeon specific variables
+:root {
+	--forjeon-primary: #0073aa;
+	--forjeon-secondary: #646970;
+	--forjeon-success: #00a32a;
+	--forjeon-warning: #dba617;
+	--forjeon-error: #d63638;
+	--forjeon-background: #f6f7f7;
+	--forjeon-border: #c3c4c7;
+	--forjeon-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	--forjeon-radius: 4px;
+	--forjeon-spacing: 8px;
+}
+
+// Typography Panel Styles
+.forjeon-typography-panel {
+	.components-panel__body-toggle {
+		color: var(--forjeon-primary);
+		font-weight: 600;
+	}
+
+	.components-panel__body-content {
+		padding: var(--forjeon-spacing);
+	}
+}
+
+// Control Component Base Styles
+.forjeon-line-height-control,
+.forjeon-letter-spacing-control,
+.forjeon-text-shadow-control {
+	margin-bottom: calc(var(--forjeon-spacing) * 2);
+	padding: var(--forjeon-spacing);
+	background: var(--forjeon-background);
+	border: 1px solid var(--forjeon-border);
+	border-radius: var(--forjeon-radius);
+	box-shadow: var(--forjeon-shadow);
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+// Control Header
+.forjeon-control-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: var(--forjeon-spacing);
+
+	h4 {
+		margin: 0;
+		font-size: 14px;
+		font-weight: 600;
+		color: var(--forjeon-secondary);
+	}
+
+	.forjeon-reset-button {
+		padding: 4px 8px;
+		font-size: 12px;
+		color: var(--forjeon-secondary);
+		background: transparent;
+		border: 1px solid var(--forjeon-border);
+		border-radius: var(--forjeon-radius);
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		&:hover {
+			background: var(--forjeon-background);
+			border-color: var(--forjeon-primary);
+			color: var(--forjeon-primary);
+		}
+
+		&:focus {
+			outline: 2px solid var(--forjeon-primary);
+			outline-offset: 2px;
+		}
+	}
+}
+
+// Control Content
+.forjeon-control-content {
+	.forjeon-range-control {
+		margin-bottom: var(--forjeon-spacing);
+
+		.components-range-control__slider {
+			width: 100%;
+		}
+
+		.components-range-control__number {
+			width: 80px;
+		}
+	}
+
+	.forjeon-input-group {
+		display: flex;
+		gap: var(--forjeon-spacing);
+		margin-bottom: var(--forjeon-spacing);
+
+		.forjeon-number-input {
+			flex: 1;
+
+			.components-text-control__input {
+				width: 100%;
+			}
+		}
+
+		.forjeon-unit-select {
+			flex: 0 0 80px;
+
+			.components-select-control__input {
+				width: 100%;
+			}
+		}
+	}
+
+	.forjeon-input-row {
+		display: flex;
+		gap: var(--forjeon-spacing);
+		margin-bottom: var(--forjeon-spacing);
+
+		.forjeon-number-input {
+			flex: 1;
+
+			.components-text-control__input {
+				width: 100%;
+			}
+		}
+	}
+}
+
+// Text Shadow Specific Styles
+.forjeon-text-shadow-control {
+	.forjeon-shadow-inputs {
+		margin-bottom: var(--forjeon-spacing);
+	}
+
+	.forjeon-color-section {
+		margin-bottom: var(--forjeon-spacing);
+
+		.forjeon-color-button {
+			width: 100%;
+			height: 40px;
+			border: 2px solid var(--forjeon-border);
+			border-radius: var(--forjeon-radius);
+			cursor: pointer;
+			transition: border-color 0.2s ease;
+
+			&:hover {
+				border-color: var(--forjeon-primary);
+			}
+
+			&:focus {
+				outline: 2px solid var(--forjeon-primary);
+				outline-offset: 2px;
+			}
+		}
+
+		.forjeon-color-picker {
+			margin-top: var(--forjeon-spacing);
+			padding: var(--forjeon-spacing);
+			background: white;
+			border: 1px solid var(--forjeon-border);
+			border-radius: var(--forjeon-radius);
+			box-shadow: var(--forjeon-shadow);
+		}
+	}
+
+	.forjeon-presets {
+		margin-bottom: var(--forjeon-spacing);
+
+		h5 {
+			margin: 0 0 var(--forjeon-spacing) 0;
+			font-size: 13px;
+			font-weight: 600;
+			color: var(--forjeon-secondary);
+		}
+
+		.forjeon-preset-buttons {
+			display: flex;
+			gap: calc(var(--forjeon-spacing) / 2);
+
+			.forjeon-preset-button {
+				flex: 1;
+				justify-content: center;
+			}
+		}
+	}
+}
+
+// Preview Section
+.forjeon-preview {
+	margin-top: var(--forjeon-spacing);
+	padding: var(--forjeon-spacing);
+	background: white;
+	border: 1px solid var(--forjeon-border);
+	border-radius: var(--forjeon-radius);
+
+	.forjeon-preview-text {
+		font-size: 14px;
+		line-height: 1.4;
+		color: #333;
+		text-align: center;
+		min-height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+// Responsive Design
+@media (max-width: 782px) {
+	.forjeon-input-group,
+	.forjeon-input-row {
+		flex-direction: column;
+		gap: calc(var(--forjeon-spacing) / 2);
+
+		.forjeon-number-input,
+		.forjeon-unit-select {
+			flex: none;
+		}
+	}
+
+	.forjeon-preset-buttons {
+		flex-direction: column;
+
+		.forjeon-preset-button {
+			width: 100%;
+		}
+	}
+}
+
+// Accessibility Enhancements
+.forjeon-typography-panel {
+	// High contrast support
+	@media (prefers-contrast: high) {
+		--forjeon-border: #000;
+		--forjeon-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+	}
+
+	// Reduced motion support
+	@media (prefers-reduced-motion: reduce) {
+		* {
+			transition: none !important;
+			animation: none !important;
+		}
+	}
+}
+
+// Focus Management
+.forjeon-control-content {
+	*:focus {
+		outline: 2px solid var(--forjeon-primary);
+		outline-offset: 2px;
+	}
+
+	// Ensure minimum touch target size on mobile
+	@media (max-width: 782px) {
+		button,
+		input,
+		select {
+			min-height: 44px;
+		}
+	}
+}
+
+// WordPress Integration
+.forjeon-typography-panel {
+	// Integrate with WordPress admin styles
+	.components-base-control__label {
+		font-weight: 600;
+		color: var(--forjeon-secondary);
+	}
+
+	.components-base-control__help {
+		font-size: 12px;
+		color: var(--forjeon-secondary);
+		margin-top: 4px;
+	}
+
+	// Match WordPress component spacing
+	.components-base-control {
+		margin-bottom: 16px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
