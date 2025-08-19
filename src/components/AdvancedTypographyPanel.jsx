@@ -5,7 +5,7 @@ import { store as blockEditorStore } from '@wordpress/block-editor';
 import { store as editorStore } from '@wordpress/editor';
 import { LineHeightControl } from './LineHeightControl';
 import { LetterSpacingControl } from './LetterSpacingControl';
-import { TextShadowControl } from './ TextShadowControl';
+import { TextShadowControl } from './TextShadowControl';
 
 /**
  * Advanced Typography Panel Component
