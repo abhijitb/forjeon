@@ -33,23 +33,10 @@ define( 'FORJEON_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FORJEON_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'FORJEON_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
-// Autoloader for plugin classes
-spl_autoload_register( function ( $class ) {
-	$prefix = 'Forjeon\\';
-	$base_dir = FORJEON_PLUGIN_DIR . 'includes/';
-
-	$len = strlen( $prefix );
-	if ( strncmp( $prefix, $class, $len ) !== 0 ) {
-		return;
-	}
-
-	$relative_class = substr( $class, $len );
-	$file = $base_dir . 'class-' . str_replace( '\\', '/', strtolower( str_replace( '_', '-', $relative_class ) ) ) . '.php';
-
-	if ( file_exists( $file ) ) {
-		require $file;
-	}
-} );
+// Load Composer autoloader
+if ( file_exists( FORJEON_PLUGIN_DIR . 'vendor/autoload.php' ) ) {
+	require_once FORJEON_PLUGIN_DIR . 'vendor/autoload.php';
+}
 
 // Initialize the plugin
 add_action( 'plugins_loaded', 'forjeon_init' );
@@ -70,8 +57,8 @@ function forjeon_init() {
 		return;
 	}
 
-	// Initialize the main plugin class
-	$forjeon = new \Forjeon\Forjeon_Plugin();
+	// Initialize the main plugin class using singleton pattern
+	$forjeon = \Forjeon\Forjeon_Plugin::get_instance();
 	$forjeon->init();
 }
 

@@ -17,56 +17,17 @@ class Typography_Controls {
 	 * Initialize the typography controls
 	 */
 	public function init() {
-		// Hook into block editor
-		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_typography_controls' ) );
-
-		// Add typography panel to blocks
-		add_action( 'enqueue_block_editor_assets', array( $this, 'add_typography_panel' ) );
+		// Typography panel is now handled by JavaScript
+		// Assets are enqueued by the main plugin class
 	}
 
 	/**
 	 * Enqueue typography control assets
+	 * Note: Assets are now handled by the main plugin class to avoid conflicts
 	 */
 	public function enqueue_typography_controls() {
-		// Enqueue typography controls JavaScript
-		wp_enqueue_script(
-			'forjeon-typography-controls',
-			FORJEON_PLUGIN_URL . 'assets/js/typography-controls.js',
-			array(
-				'wp-blocks',
-				'wp-dom-ready',
-				'wp-edit-post',
-				'wp-element',
-				'wp-i18n',
-				'wp-plugins',
-				'wp-polyfill',
-				'wp-components',
-				'wp-data',
-			),
-			FORJEON_VERSION,
-			true
-		);
-
-		// Localize script with typography data
-		wp_localize_script(
-			'forjeon-typography-controls',
-			'forjeonTypographyData',
-			array(
-				'version' => FORJEON_VERSION,
-				'pluginUrl' => FORJEON_PLUGIN_URL,
-				'nonce' => wp_create_nonce( 'forjeon_typography_nonce' ),
-				'defaults' => $this->get_default_typography_values(),
-				'presets' => $this->get_text_shadow_presets(),
-			)
-		);
-
-		// Enqueue typography control styles
-		wp_enqueue_style(
-			'forjeon-typography-controls',
-			FORJEON_PLUGIN_URL . 'assets/css/typography-controls.css',
-			array( 'wp-edit-post' ),
-			FORJEON_VERSION
-		);
+		// Assets are now enqueued by the main plugin class
+		// This method is kept for compatibility but doesn't enqueue anything
 	}
 
 	/**

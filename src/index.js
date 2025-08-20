@@ -4,10 +4,11 @@
  */
 
 import { registerPlugin } from '@wordpress/plugins';
-import { AdvancedTypographyPanel } from './components/AdvancedTypographyPanel';
+import { CustomSidebar } from './components/CustomSidebar';
+import './style.scss';
 
-// Register the advanced typography panel plugin
-registerPlugin('forjeon-advanced-typography', {
-	render: AdvancedTypographyPanel,
-	icon: 'editor-textcolor',
+// Register the custom sidebar plugin
+registerPlugin('forjeon-typography-sidebar', {
+	render: CustomSidebar,
+	icon: 'admin-customizer'
 });

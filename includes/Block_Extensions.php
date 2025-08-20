@@ -23,8 +23,8 @@ class Block_Extensions {
 		// Hook into block rendering
 		add_filter( 'render_block', array( $this, 'render_block_with_typography' ), 10, 2 );
 
-		// Hook into block attributes
-		add_filter( 'block_type_metadata', array( $this, 'extend_block_attributes' ) );
+		// Hook into block supports
+		add_action( 'init', array( $this, 'add_typography_supports' ) );
 	}
 
 	/**
@@ -39,9 +39,6 @@ class Block_Extensions {
 	 * Extend core blocks with typography attributes
 	 */
 	private function extend_core_blocks() {
-		// Get registered block types
-		$block_types = \WP_Block_Type_Registry::get_instance()->get_all_registered();
-
 		// Define blocks that should have typography controls
 		$typography_blocks = array(
 			'core/paragraph',
@@ -54,19 +51,25 @@ class Block_Extensions {
 			'core/preformatted',
 		);
 
+		// Extend each block type
 		foreach ( $typography_blocks as $block_name ) {
-			if ( isset( $block_types[ $block_name ] ) ) {
-				$this->extend_block_type( $block_types[ $block_name ] );
-			}
+			$this->extend_block_type( $block_name );
 		}
 	}
 
 	/**
 	 * Extend a block type with typography attributes
 	 *
-	 * @param \WP_Block_Type $block_type Block type to extend.
+	 * @param string $block_name Block name to extend.
 	 */
-	private function extend_block_type( $block_type ) {
+	private function extend_block_type( $block_name ) {
+		// Get the existing block type
+		$block_type = \WP_Block_Type_Registry::get_instance()->get_registered( $block_name );
+		
+		if ( ! $block_type ) {
+			return;
+		}
+
 		// Add typography attributes if they don't exist
 		if ( ! isset( $block_type->attributes['lineHeight'] ) ) {
 			$block_type->attributes['lineHeight'] = array(
@@ -91,39 +94,67 @@ class Block_Extensions {
 	}
 
 	/**
-	 * Extend block attributes during metadata processing
-	 *
-	 * @param array $metadata Block metadata.
-	 * @return array
+	 * Add typography supports to blocks
 	 */
-	public function extend_block_attributes( $metadata ) {
-		// Only process blocks that should have typography controls
-		if ( ! $this->should_extend_block( $metadata ) ) {
-			return $metadata;
+	public function add_typography_supports() {
+		// Define blocks that should have typography controls
+		$typography_blocks = array(
+			'core/paragraph',
+			'core/heading',
+			'core/list',
+			'core/quote',
+			'core/pullquote',
+			'core/verse',
+			'core/code',
+			'core/preformatted',
+		);
+
+		foreach ( $typography_blocks as $block_name ) {
+			// Add typography support to the block
+			add_filter( "block_type_metadata", function( $metadata ) use ( $block_name ) {
+				if ( isset( $metadata['name'] ) && $metadata['name'] === $block_name ) {
+					// Debug logging
+					error_log( "Forjeon: Extending block {$block_name} with typography supports" );
+					
+					// Ensure supports array exists
+					if ( ! isset( $metadata['supports'] ) ) {
+						$metadata['supports'] = array();
+					}
+
+					// Add typography supports
+					$metadata['supports']['typography'] = array(
+						'lineHeight' => true,
+						'letterSpacing' => true,
+						'textShadow' => true,
+					);
+
+					// Ensure attributes array exists
+					if ( ! isset( $metadata['attributes'] ) ) {
+						$metadata['attributes'] = array();
+					}
+
+					// Add typography attributes
+					$metadata['attributes']['lineHeight'] = array(
+						'type' => 'string',
+						'default' => '',
+					);
+
+					$metadata['attributes']['letterSpacing'] = array(
+						'type' => 'string',
+						'default' => '',
+					);
+
+					$metadata['attributes']['textShadow'] = array(
+						'type' => 'object',
+						'default' => null,
+					);
+					
+					error_log( "Forjeon: Block {$block_name} extended successfully" );
+				}
+
+				return $metadata;
+			} );
 		}
-
-		// Ensure attributes array exists
-		if ( ! isset( $metadata['attributes'] ) ) {
-			$metadata['attributes'] = array();
-		}
-
-		// Add typography attributes
-		$metadata['attributes']['lineHeight'] = array(
-			'type' => 'string',
-			'default' => '',
-		);
-
-		$metadata['attributes']['letterSpacing'] = array(
-			'type' => 'string',
-			'default' => '',
-		);
-
-		$metadata['attributes']['textShadow'] = array(
-			'type' => 'object',
-			'default' => null,
-		);
-
-		return $metadata;
 	}
 
 	/**
@@ -262,6 +293,26 @@ class Block_Extensions {
 		// Build style attribute
 		$style_attr = '';
 		foreach ( $styles as $property => $value ) {
+			// Handle array values (like {value: 1.5, unit: 'em'})
+			if ( is_array( $value ) ) {
+				// Skip invalid array values
+				if ( ! isset( $value['value'] ) ) {
+					continue;
+				}
+				
+				// Convert array to CSS value
+				$css_value = $value['value'];
+				if ( ! empty( $value['unit'] ) ) {
+					$css_value .= $value['unit'];
+				}
+				$value = $css_value;
+			}
+			
+			// Skip empty values
+			if ( empty( $value ) && $value !== '0' ) {
+				continue;
+			}
+			
 			$style_attr .= $property . ':' . $value . ';';
 		}
 

@@ -96,35 +96,13 @@ class Forjeon_Plugin {
 	 */
 	private function setup_hooks() {
 		// Admin hooks
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
-
-		// Frontend hooks
-		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_scripts' ) );
 
 		// Block editor hooks
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
 
 		// Plugin action links
 		add_filter( 'plugin_action_links_' . FORJEON_PLUGIN_BASENAME, array( $this, 'plugin_action_links' ) );
-	}
-
-	/**
-	 * Enqueue admin scripts and styles
-	 */
-	public function admin_enqueue_scripts() {
-		// Only load on post edit screens
-		$screen = get_current_screen();
-		if ( ! $screen || ! in_array( $screen->base, array( 'post', 'post-new' ), true ) ) {
-			return;
-		}
-
-		wp_enqueue_style(
-			'forjeon-admin',
-			FORJEON_PLUGIN_URL . 'assets/css/admin.css',
-			array(),
-			FORJEON_VERSION
-		);
 	}
 
 	/**
@@ -138,40 +116,18 @@ class Forjeon_Plugin {
 	}
 
 	/**
-	 * Enqueue frontend scripts and styles
-	 */
-	public function frontend_enqueue_scripts() {
-		// Only load when needed
-		if ( ! $this->should_load_frontend_assets() ) {
-			return;
-		}
-
-		wp_enqueue_style(
-			'forjeon-frontend',
-			FORJEON_PLUGIN_URL . 'assets/css/frontend.css',
-			array(),
-			FORJEON_VERSION
-		);
-	}
-
-	/**
 	 * Enqueue block editor assets
 	 */
 	public function enqueue_block_editor_assets() {
+		// Get asset dependencies and version
+		$asset_file = include( FORJEON_PLUGIN_DIR . 'build/index.asset.php' );
+
 		// Enqueue the main JavaScript file
 		wp_enqueue_script(
 			'forjeon-block-editor',
-			FORJEON_PLUGIN_URL . 'assets/js/block-editor.js',
-			array(
-				'wp-blocks',
-				'wp-dom-ready',
-				'wp-edit-post',
-				'wp-element',
-				'wp-i18n',
-				'wp-plugins',
-				'wp-polyfill',
-			),
-			FORJEON_VERSION,
+			FORJEON_PLUGIN_URL . 'build/index.js',
+			$asset_file['dependencies'],
+			$asset_file['version'],
 			true
 		);
 
@@ -183,15 +139,19 @@ class Forjeon_Plugin {
 				'version' => FORJEON_VERSION,
 				'pluginUrl' => FORJEON_PLUGIN_URL,
 				'nonce' => wp_create_nonce( 'forjeon_nonce' ),
+				'typography' => array(
+					'defaults' => $this->get_typography_defaults(),
+					'presets' => $this->get_text_shadow_presets(),
+				),
 			)
 		);
 
 		// Enqueue block editor styles
 		wp_enqueue_style(
 			'forjeon-block-editor',
-			FORJEON_PLUGIN_URL . 'assets/css/block-editor.css',
-			array( 'wp-edit-post' ),
-			FORJEON_VERSION
+			FORJEON_PLUGIN_URL . 'build/style-index.css',
+			array(),
+			$asset_file['version']
 		);
 	}
 
@@ -225,6 +185,99 @@ class Forjeon_Plugin {
 			</p>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Get typography defaults
+	 *
+	 * @return array
+	 */
+	private function get_typography_defaults() {
+		return array(
+			'lineHeight' => array(
+				'min' => 0.5,
+				'max' => 3.0,
+				'step' => 0.1,
+				'default' => 1.5,
+				'units' => array(
+					array(
+						'value' => '',
+						'label' => 'Unitless',
+					),
+					array(
+						'value' => 'em',
+						'label' => 'em',
+					),
+					array(
+						'value' => 'px',
+						'label' => 'px',
+					),
+				),
+			),
+			'letterSpacing' => array(
+				'min' => -0.1,
+				'max' => 0.5,
+				'step' => 0.01,
+				'default' => 0,
+				'units' => array(
+					array(
+						'value' => 'em',
+						'label' => 'em',
+					),
+					array(
+						'value' => 'px',
+						'label' => 'px',
+					),
+				),
+			),
+			'textShadow' => array(
+				'x' => array(
+					'min' => -10,
+					'max' => 10,
+					'step' => 1,
+					'default' => 0,
+				),
+				'y' => array(
+					'min' => -10,
+					'max' => 10,
+					'step' => 1,
+					'default' => 0,
+				),
+				'blur' => array(
+					'min' => 0,
+					'max' => 20,
+					'step' => 1,
+					'default' => 0,
+				),
+				'color' => '#000000',
+			),
+		);
+	}
+
+	/**
+	 * Get text shadow presets
+	 *
+	 * @return array
+	 */
+	private function get_text_shadow_presets() {
+		return array(
+			'soft' => array(
+				'label' => 'Soft',
+				'value' => '0 2px 4px rgba(0, 0, 0, 0.1)',
+			),
+			'medium' => array(
+				'label' => 'Medium',
+				'value' => '0 4px 8px rgba(0, 0, 0, 0.15)',
+			),
+			'strong' => array(
+				'label' => 'Strong',
+				'value' => '0 8px 16px rgba(0, 0, 0, 0.2)',
+			),
+			'glow' => array(
+				'label' => 'Glow',
+				'value' => '0 0 20px rgba(0, 123, 170, 0.5)',
+			),
+		);
 	}
 
 	/**

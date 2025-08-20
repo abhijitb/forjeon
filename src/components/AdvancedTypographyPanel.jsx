@@ -1,15 +1,12 @@
 import { __ } from '@wordpress/i18n';
-import { PluginDocumentSettingPanel } from '@wordpress/edit-post';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { store as blockEditorStore } from '@wordpress/block-editor';
-import { store as editorStore } from '@wordpress/editor';
 import { LineHeightControl } from './LineHeightControl';
 import { LetterSpacingControl } from './LetterSpacingControl';
 import { TextShadowControl } from './TextShadowControl';
 
 /**
  * Advanced Typography Panel Component
- * Integrates with the block editor to provide typography controls
  */
 export function AdvancedTypographyPanel() {
 	const { selectedBlock, selectedBlockClientId } = useSelect((select) => {
@@ -26,7 +23,11 @@ export function AdvancedTypographyPanel() {
 	const supportsTypography = selectedBlock && isTypographyBlock(selectedBlock.name);
 
 	if (!supportsTypography) {
-		return null;
+		return (
+			<div style={{ padding: '16px', color: '#666', fontStyle: 'italic' }}>
+				{__('Select a text block to customize typography', 'forjeon')}
+			</div>
+		);
 	}
 
 	const handleTypographyChange = (property, value) => {
@@ -38,11 +39,21 @@ export function AdvancedTypographyPanel() {
 	};
 
 	return (
-		<PluginDocumentSettingPanel
-			name="forjeon-advanced-typography"
-			title={__('Advanced Typography', 'forjeon')}
-			className="forjeon-typography-panel"
-		>
+		<div className="forjeon-typography-panel" style={{
+			padding: '16px',
+			background: '#f6f7f7',
+			border: '2px solid #0073aa',
+			borderRadius: '8px',
+			margin: '16px 0'
+		}}>
+			<h3 style={{ margin: '0 0 16px 0', color: '#0073aa' }}>
+				🎨 {__('Forjeon Advanced Typography', 'forjeon')}
+			</h3>
+			
+			<p style={{ margin: '0 0 16px 0', fontSize: '13px', color: '#0073aa' }}>
+				{__('Customize typography for:', 'forjeon')} {selectedBlock?.name.replace('core/', '')}
+			</p>
+			
 			<LineHeightControl
 				value={selectedBlock?.attributes?.lineHeight}
 				onChange={(value) => handleTypographyChange('lineHeight', value)}
@@ -57,7 +68,7 @@ export function AdvancedTypographyPanel() {
 				value={selectedBlock?.attributes?.textShadow}
 				onChange={(value) => handleTypographyChange('textShadow', value)}
 			/>
-		</PluginDocumentSettingPanel>
+		</div>
 	);
 }
 
