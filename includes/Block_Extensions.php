@@ -17,14 +17,17 @@ class Block_Extensions {
 	 * Initialize the block extensions
 	 */
 	public function init() {
-		// Hook into block registration
-		add_action( 'init', array( $this, 'register_block_extensions' ) );
+		// Hook into block registration using a different approach
+		add_action( 'init', array( $this, 'register_block_extensions' ), 20 );
 
 		// Hook into block rendering
 		add_filter( 'render_block', array( $this, 'render_block_with_typography' ), 10, 2 );
 
-		// Hook into block supports
-		add_action( 'init', array( $this, 'add_typography_supports' ) );
+		// Hook into block supports using wp_loaded for better timing
+		add_action( 'wp_loaded', array( $this, 'add_typography_supports' ) );
+		
+		// Use block editor enqueue to register custom attributes
+		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_attributes' ) );
 	}
 
 	/**
@@ -113,9 +116,6 @@ class Block_Extensions {
 			// Add typography support to the block
 			add_filter( "block_type_metadata", function( $metadata ) use ( $block_name ) {
 				if ( isset( $metadata['name'] ) && $metadata['name'] === $block_name ) {
-					// Debug logging
-					error_log( "Forjeon: Extending block {$block_name} with typography supports" );
-					
 					// Ensure supports array exists
 					if ( ! isset( $metadata['supports'] ) ) {
 						$metadata['supports'] = array();
@@ -148,10 +148,7 @@ class Block_Extensions {
 						'type' => 'object',
 						'default' => null,
 					);
-					
-					error_log( "Forjeon: Block {$block_name} extended successfully" );
 				}
-
 				return $metadata;
 			} );
 		}
@@ -210,9 +207,11 @@ class Block_Extensions {
 	 * @return bool
 	 */
 	private function has_typography_attributes( $block ) {
-		return isset( $block['attrs']['lineHeight'] ) ||
-			   isset( $block['attrs']['letterSpacing'] ) ||
-			   isset( $block['attrs']['textShadow'] );
+		return (
+			( isset( $block['attrs']['lineHeight'] ) && $block['attrs']['lineHeight'] !== null && $block['attrs']['lineHeight'] !== '' ) ||
+			( isset( $block['attrs']['letterSpacing'] ) && $block['attrs']['letterSpacing'] !== null && $block['attrs']['letterSpacing'] !== '' ) ||
+			( isset( $block['attrs']['textShadow'] ) && $block['attrs']['textShadow'] !== null && $block['attrs']['textShadow'] !== '' )
+		);
 	}
 
 	/**
@@ -226,12 +225,32 @@ class Block_Extensions {
 
 		// Line height
 		if ( ! empty( $block['attrs']['lineHeight'] ) ) {
-			$styles['line-height'] = $block['attrs']['lineHeight'];
+			$line_height = $block['attrs']['lineHeight'];
+			
+			// Handle object format {value: 1.5, unit: 'em'}
+			if ( is_array( $line_height ) && isset( $line_height['value'] ) ) {
+				$value = $line_height['value'];
+				$unit = $line_height['unit'] ?? '';
+				$styles['line-height'] = $value . $unit;
+			} elseif ( is_string( $line_height ) || is_numeric( $line_height ) ) {
+				// Handle direct string/numeric values
+				$styles['line-height'] = $line_height;
+			}
 		}
 
 		// Letter spacing
 		if ( ! empty( $block['attrs']['letterSpacing'] ) ) {
-			$styles['letter-spacing'] = $block['attrs']['letterSpacing'];
+			$letter_spacing = $block['attrs']['letterSpacing'];
+			
+			// Handle object format {value: 0.1, unit: 'em'}
+			if ( is_array( $letter_spacing ) && isset( $letter_spacing['value'] ) ) {
+				$value = $letter_spacing['value'];
+				$unit = $letter_spacing['unit'] ?? 'em';
+				$styles['letter-spacing'] = $value . $unit;
+			} elseif ( is_string( $letter_spacing ) || is_numeric( $letter_spacing ) ) {
+				// Handle direct string/numeric values
+				$styles['letter-spacing'] = $letter_spacing;
+			}
 		}
 
 		// Text shadow
@@ -316,6 +335,11 @@ class Block_Extensions {
 			$style_attr .= $property . ':' . $value . ';';
 		}
 
+		// If no styles, return original content
+		if ( empty( $style_attr ) ) {
+			return $block_content;
+		}
+
 		// Add class and style to the first element
 		if ( preg_match( '/<([a-z0-9]+)/i', $block_content, $matches ) ) {
 			$tag = $matches[1];
@@ -371,5 +395,19 @@ class Block_Extensions {
 		);
 
 		return $attributes;
+	}
+
+	/**
+	 * Enqueue block editor assets for attribute registration
+	 */
+	public function enqueue_block_attributes() {
+		// Enqueue the block attributes script
+		wp_enqueue_script(
+			'forjeon-block-attributes',
+			plugin_dir_url( dirname( __FILE__ ) ) . 'src/block-attributes.js',
+			array( 'wp-hooks', 'wp-blocks' ),
+			filemtime( plugin_dir_path( dirname( __FILE__ ) ) . 'src/block-attributes.js' ),
+			true
+		);
 	}
 }

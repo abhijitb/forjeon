@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { RangeControl, TextControl, Button, ButtonGroup } from '@wordpress/components';
+import { RangeControl, TextControl, Button } from '@wordpress/components';
 import { ColorPicker } from '@wordpress/components';
 import { useState, useEffect } from '@wordpress/element';
 
@@ -112,6 +112,8 @@ export function TextShadowControl({ value, onChange }) {
 							step={defaults.x.step}
 							label={__('X Offset', 'forjeon')}
 							className="forjeon-number-input"
+							__nextHasNoMarginBottom={true}
+							__next40pxDefaultSize={true}
 						/>
 
 						<TextControl
@@ -123,6 +125,8 @@ export function TextShadowControl({ value, onChange }) {
 							step={defaults.y.step}
 							label={__('Y Offset', 'forjeon')}
 							className="forjeon-number-input"
+							__nextHasNoMarginBottom={true}
+							__next40pxDefaultSize={true}
 						/>
 					</div>
 
@@ -135,6 +139,8 @@ export function TextShadowControl({ value, onChange }) {
 							step={defaults.blur.step}
 							label={__('Blur Radius', 'forjeon')}
 							className="forjeon-range-control"
+							__nextHasNoMarginBottom={true}
+							__next40pxDefaultSize={true}
 						/>
 					</div>
 
@@ -163,7 +169,7 @@ export function TextShadowControl({ value, onChange }) {
 
 				<div className="forjeon-presets">
 					<h5>{__('Presets', 'forjeon')}</h5>
-					<ButtonGroup className="forjeon-preset-buttons">
+					<div className="forjeon-preset-buttons" style={{ display: 'flex', gap: '8px' }}>
 						{presets.map((preset) => (
 							<Button
 								key={preset.key}
@@ -175,7 +181,7 @@ export function TextShadowControl({ value, onChange }) {
 								{preset.label}
 							</Button>
 						))}
-					</ButtonGroup>
+					</div>
 				</div>
 
 				<div className="forjeon-preview">

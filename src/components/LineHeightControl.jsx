@@ -102,6 +102,8 @@ export function LineHeightControl({ value, onChange }) {
 					step={defaults.step}
 					label={__('Line Height Slider', 'forjeon')}
 					className="forjeon-range-control"
+					__nextHasNoMarginBottom={true}
+					__next40pxDefaultSize={true}
 				/>
 
 				<div className="forjeon-input-group">
@@ -114,6 +116,8 @@ export function LineHeightControl({ value, onChange }) {
 						step={defaults.step}
 						label={__('Line Height Value', 'forjeon')}
 						className="forjeon-number-input"
+						__nextHasNoMarginBottom={true}
+						__next40pxDefaultSize={true}
 					/>
 
 					<SelectControl
@@ -122,6 +126,8 @@ export function LineHeightControl({ value, onChange }) {
 						options={defaults.units}
 						label={__('Unit', 'forjeon')}
 						className="forjeon-unit-select"
+						__nextHasNoMarginBottom={true}
+						__next40pxDefaultSize={true}
 					/>
 				</div>
 
