@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "forjeon/tab-panel",
+  "version": "1.0.0",
+  "title": "Tab Panel",
+  "category": "forjeon",
+  "description": "Individual tab panel content for the Tabs block.",
+  "keywords": [
+    "tab",
+    "panel",
+    "content"
+  ],
+  "textdomain": "forjeon",
+  "parent": [
+    "forjeon/tabs"
+  ],
+  "attributes": {
+    "content": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "usesContext": [
+    "forjeon/tabId",
+    "forjeon/tabsData"
+  ],
+  "supports": {
+    "html": false,
+    "reusable": false,
+    "lock": false,
+    "spacing": {
+      "margin": true,
+      "padding": true
+    },
+    "color": {
+      "gradients": true,
+      "link": true,
+      "__experimentalDefaultControls": {
+        "background": true,
+        "text": true
+      }
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css"
+}

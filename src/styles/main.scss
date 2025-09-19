@@ -9,7 +9,7 @@
 @import "@wordpress/base-styles/mixins";
 
 // Import block styles
-@import "./blocks/tabs-frontend";
+@import "../blocks/content/tabs/frontend";
 
 // Forjeon specific variables
 :root {

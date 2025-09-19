@@ -6,17 +6,17 @@
  * @since 1.0.0
  */
 
-namespace Forjeon;
+namespace Forjeon\Core;
 
 /**
  * Main plugin class that handles initialization and core functionality
  */
-class Forjeon_Plugin {
+class Plugin {
 
 	/**
 	 * Plugin instance
 	 *
-	 * @var Forjeon_Plugin
+	 * @var Plugin
 	 */
 	private static $instance = null;
 
@@ -51,7 +51,7 @@ class Forjeon_Plugin {
 	/**
 	 * Get plugin instance
 	 *
-	 * @return Forjeon_Plugin
+	 * @return Plugin
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -73,16 +73,16 @@ class Forjeon_Plugin {
 	 */
 	private function init_components() {
 		// Initialize block extensions
-		$this->block_extensions = new Block_Extensions();
+		$this->block_extensions = new \Forjeon\Legacy\Block_Extensions();
 
 		// Initialize typography controls
-		$this->typography_controls = new Typography_Controls();
+		$this->typography_controls = new \Forjeon\Legacy\Typography_Controls();
 
 		// Initialize CSS generator
-		$this->css_generator = new CSS_Generator();
+		$this->css_generator = new \Forjeon\Utilities\CSS_Generator();
 
 		// Initialize tabs block
-		$this->tabs_block = new Tabs_Block();
+		$this->tabs_block = new \Forjeon\Blocks\Content\Tabs_Block();
 	}
 
 	/**

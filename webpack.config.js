@@ -13,13 +13,13 @@ module.exports = {
 		// Tabs block entries
 		'blocks/tabs/index': path.resolve(
 			process.cwd(),
-			'includes/blocks/tabs',
+			'src/blocks/content/tabs',
 			'index.js'
 		),
 		'tabs-frontend': path.resolve(
 			process.cwd(),
-			'src/blocks',
-			'tabs-frontend.js'
+			'src/blocks/content/tabs',
+			'frontend.js'
 		),
 	},
 	output: {

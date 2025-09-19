@@ -6,8 +6,8 @@
 import { registerPlugin } from '@wordpress/plugins';
 import { addFilter } from '@wordpress/hooks';
 import { createHigherOrderComponent } from '@wordpress/compose';
-import { CustomSidebar } from './components/CustomSidebar';
-import './style.scss';
+import { CustomSidebar } from './toolbar/components/layout/CustomSidebar';
+import './styles/main.scss';
 
 // Register the custom toolbar plugin
 registerPlugin('forjeon-toolbar', {

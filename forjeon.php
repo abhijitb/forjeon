@@ -58,7 +58,7 @@ function forjeon_init() {
 	}
 
 	// Initialize the main plugin class using singleton pattern
-	$forjeon = \Forjeon\Forjeon_Plugin::get_instance();
+	$forjeon = \Forjeon\Core\Plugin::get_instance();
 	$forjeon->init();
 }
 

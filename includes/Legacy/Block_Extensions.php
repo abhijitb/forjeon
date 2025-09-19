@@ -6,7 +6,7 @@
  * @since 1.0.0
  */
 
-namespace Forjeon;
+namespace Forjeon\Legacy;
 
 /**
  * Handles extending WordPress blocks with typography attributes
@@ -404,9 +404,9 @@ class Block_Extensions {
 		// Enqueue the block attributes script
 		wp_enqueue_script(
 			'forjeon-block-attributes',
-			plugin_dir_url( dirname( __FILE__ ) ) . 'src/block-attributes.js',
+			FORJEON_PLUGIN_URL . 'src/utils/block-attributes.js',
 			array( 'wp-hooks', 'wp-blocks' ),
-			filemtime( plugin_dir_path( dirname( __FILE__ ) ) . 'src/block-attributes.js' ),
+			filemtime( FORJEON_PLUGIN_DIR . 'src/utils/block-attributes.js' ),
 			true
 		);
 	}

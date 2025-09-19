@@ -6,7 +6,7 @@
  * @since 1.0.0
  */
 
-namespace Forjeon;
+namespace Forjeon\Utilities;
 
 /**
  * Handles CSS generation for typography controls

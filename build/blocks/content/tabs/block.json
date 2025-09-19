@@ -1,0 +1,105 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "forjeon/tabs",
+  "version": "1.0.0",
+  "title": "Tabs",
+  "category": "forjeon",
+  "description": "Create tabbed content with multiple panels that users can switch between.",
+  "keywords": [
+    "tabs",
+    "tabbed content",
+    "accordion",
+    "panels"
+  ],
+  "textdomain": "forjeon",
+  "attributes": {
+    "tabs": {
+      "type": "array",
+      "default": [
+        {
+          "title": "Tab 1",
+          "id": "tab-1",
+          "isActive": true,
+          "content": ""
+        },
+        {
+          "title": "Tab 2",
+          "id": "tab-2",
+          "isActive": false,
+          "content": ""
+        }
+      ]
+    },
+    "activeTab": {
+      "type": "number",
+      "default": 0
+    },
+    "tabStyle": {
+      "type": "string",
+      "default": "default",
+      "enum": [
+        "default",
+        "pills",
+        "underline"
+      ]
+    },
+    "tabAlignment": {
+      "type": "string",
+      "default": "left",
+      "enum": [
+        "left",
+        "center",
+        "right"
+      ]
+    },
+    "mobileBreakpoint": {
+      "type": "number",
+      "default": 768
+    },
+    "enableAccordionOnMobile": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "providesContext": {
+    "forjeon/tabId": "activeTab",
+    "forjeon/tabsData": "tabs"
+  },
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true
+    },
+    "color": {
+      "gradients": true,
+      "link": true,
+      "__experimentalDefaultControls": {
+        "background": true,
+        "text": true
+      }
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true,
+      "__experimentalFontFamily": true,
+      "__experimentalFontWeight": true,
+      "__experimentalFontStyle": true,
+      "__experimentalTextTransform": true,
+      "__experimentalTextDecoration": true,
+      "__experimentalLetterSpacing": true,
+      "__experimentalDefaultControls": {
+        "fontSize": true
+      }
+    }
+  },
+  "editorScript": "forjeon-tabs-editor",
+  "editorStyle": "forjeon-tabs-editor",
+  "style": "forjeon-tabs-frontend",
+  "render": "file:./render.php"
+}

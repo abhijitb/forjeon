@@ -1,9 +1,9 @@
 import { __ } from '@wordpress/i18n';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { store as blockEditorStore } from '@wordpress/block-editor';
-import { LineHeightControl } from './LineHeightControl';
-import { LetterSpacingControl } from './LetterSpacingControl';
-import { TextShadowControl } from './TextShadowControl';
+import { LineHeightControl } from '../controls/typography/LineHeightControl';
+import { LetterSpacingControl } from '../controls/typography/LetterSpacingControl';
+import { TextShadowControl } from '../controls/typography/TextShadowControl';
 
 /**
  * Advanced Typography Panel Component

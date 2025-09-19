@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/editor';
 import { PanelBody } from '@wordpress/components';
-import { AdvancedTypographyPanel } from './AdvancedTypographyPanel';
+import { AdvancedTypographyPanel } from '../../tabs/TypographyTab';
 
 /**
  * Custom Sidebar Component that creates a dedicated sidebar

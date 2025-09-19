@@ -6,7 +6,7 @@
  * @since 1.0.0
  */
 
-namespace Forjeon;
+namespace Forjeon\Legacy;
 
 /**
  * Handles typography control components and functionality
