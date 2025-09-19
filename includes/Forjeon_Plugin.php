@@ -42,6 +42,13 @@ class Forjeon_Plugin {
 	private $css_generator;
 
 	/**
+	 * Tabs block instance
+	 *
+	 * @var Tabs_Block
+	 */
+	private $tabs_block;
+
+	/**
 	 * Get plugin instance
 	 *
 	 * @return Forjeon_Plugin
@@ -73,6 +80,9 @@ class Forjeon_Plugin {
 
 		// Initialize CSS generator
 		$this->css_generator = new CSS_Generator();
+
+		// Initialize tabs block
+		$this->tabs_block = new Tabs_Block();
 	}
 
 	/**
@@ -86,6 +96,7 @@ class Forjeon_Plugin {
 		$this->block_extensions->init();
 		$this->typography_controls->init();
 		$this->css_generator->init();
+		$this->tabs_block->init();
 
 		// Load text domain for internationalization
 		$this->load_textdomain();
@@ -380,5 +391,14 @@ class Forjeon_Plugin {
 	 */
 	public function get_css_generator() {
 		return $this->css_generator;
+	}
+
+	/**
+	 * Get tabs block instance
+	 *
+	 * @return Tabs_Block
+	 */
+	public function get_tabs_block() {
+		return $this->tabs_block;
 	}
 }

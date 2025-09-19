@@ -8,22 +8,25 @@ import { useState, useEffect } from '@wordpress/element';
  * Provides controls for X/Y offset, blur radius, and color with preset options
  */
 export function TextShadowControl({ value, onChange }) {
-	const [localValue, setLocalValue] = useState(value || {
-		x: 0,
-		y: 2,
-		blur: 3,
-		color: '#000000',
-	});
+	const [localValue, setLocalValue] = useState(
+		value || {
+			x: 0,
+			y: 2,
+			blur: 3,
+			color: '#000000',
+		}
+	);
 	const [showColorPicker, setShowColorPicker] = useState(false);
 
 	// Update local state when prop changes
 	useEffect(() => {
-		if (value && (
-			value.x !== localValue.x ||
-			value.y !== localValue.y ||
-			value.blur !== localValue.blur ||
-			value.color !== localValue.color
-		)) {
+		if (
+			value &&
+			(value.x !== localValue.x ||
+				value.y !== localValue.y ||
+				value.blur !== localValue.blur ||
+				value.color !== localValue.color)
+		) {
 			setLocalValue(value);
 		}
 	}, [value]);
@@ -106,7 +109,9 @@ export function TextShadowControl({ value, onChange }) {
 						<TextControl
 							type="number"
 							value={localValue.x}
-							onChange={(value) => handleValueChange('x', parseInt(value) || 0)}
+							onChange={(value) =>
+								handleValueChange('x', parseInt(value) || 0)
+							}
 							min={defaults.x.min}
 							max={defaults.x.max}
 							step={defaults.x.step}
@@ -119,7 +124,9 @@ export function TextShadowControl({ value, onChange }) {
 						<TextControl
 							type="number"
 							value={localValue.y}
-							onChange={(value) => handleValueChange('y', parseInt(value) || 0)}
+							onChange={(value) =>
+								handleValueChange('y', parseInt(value) || 0)
+							}
 							min={defaults.y.min}
 							max={defaults.y.max}
 							step={defaults.y.step}
@@ -133,7 +140,9 @@ export function TextShadowControl({ value, onChange }) {
 					<div className="forjeon-input-row">
 						<RangeControl
 							value={localValue.blur}
-							onChange={(value) => handleValueChange('blur', value)}
+							onChange={(value) =>
+								handleValueChange('blur', value)
+							}
 							min={defaults.blur.min}
 							max={defaults.blur.max}
 							step={defaults.blur.step}
@@ -159,7 +168,9 @@ export function TextShadowControl({ value, onChange }) {
 							<div className="forjeon-color-picker">
 								<ColorPicker
 									color={localValue.color}
-									onChange={(color) => handleValueChange('color', color)}
+									onChange={(color) =>
+										handleValueChange('color', color)
+									}
 									enableAlpha={true}
 								/>
 							</div>
@@ -169,7 +180,10 @@ export function TextShadowControl({ value, onChange }) {
 
 				<div className="forjeon-presets">
 					<h5>{__('Presets', 'forjeon')}</h5>
-					<div className="forjeon-preset-buttons" style={{ display: 'flex', gap: '8px' }}>
+					<div
+						className="forjeon-preset-buttons"
+						style={{ display: 'flex', gap: '8px' }}
+					>
 						{presets.map((preset) => (
 							<Button
 								key={preset.key}

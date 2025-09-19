@@ -1,5 +1,9 @@
 import { __ } from '@wordpress/i18n';
-import { RangeControl, SelectControl, TextControl } from '@wordpress/components';
+import {
+	RangeControl,
+	SelectControl,
+	TextControl,
+} from '@wordpress/components';
 import { useState, useEffect } from '@wordpress/element';
 
 /**
@@ -7,12 +11,17 @@ import { useState, useEffect } from '@wordpress/element';
  * Provides fine-grained control for letter spacing with unit selection
  */
 export function LetterSpacingControl({ value, onChange }) {
-	const [localValue, setLocalValue] = useState(value || { value: 0, unit: 'em' });
+	const [localValue, setLocalValue] = useState(
+		value || { value: 0, unit: 'em' }
+	);
 	const [inputValue, setInputValue] = useState(value?.value || 0);
 
 	// Update local state when prop changes
 	useEffect(() => {
-		if (value && (value.value !== localValue.value || value.unit !== localValue.unit)) {
+		if (
+			value &&
+			(value.value !== localValue.value || value.unit !== localValue.unit)
+		) {
 			setLocalValue(value);
 			setInputValue(value.value);
 		}
@@ -48,7 +57,10 @@ export function LetterSpacingControl({ value, onChange }) {
 		}
 
 		// Clamp value to valid range
-		const clampedValue = Math.max(defaults.min, Math.min(defaults.max, numValue));
+		const clampedValue = Math.max(
+			defaults.min,
+			Math.min(defaults.max, numValue)
+		);
 		const newLetterSpacing = {
 			value: clampedValue,
 			unit: localValue.unit,
@@ -83,13 +95,15 @@ export function LetterSpacingControl({ value, onChange }) {
 		const text = __('Sample text spacing', 'forjeon');
 		const spacing = localValue.value;
 		const unit = localValue.unit;
-		
+
 		if (spacing === 0) {
 			return text;
 		}
 
 		// Add spacing between characters
-		return text.split('').join(`<span style="margin-right: ${spacing}${unit}"></span>`);
+		return text
+			.split('')
+			.join(`<span style="margin-right: ${spacing}${unit}"></span>`);
 	};
 
 	return (
@@ -146,7 +160,11 @@ export function LetterSpacingControl({ value, onChange }) {
 
 				<div className="forjeon-preview">
 					<div className="forjeon-preview-text">
-						<span dangerouslySetInnerHTML={{ __html: generateSpacedText() }} />
+						<span
+							dangerouslySetInnerHTML={{
+								__html: generateSpacedText(),
+							}}
+						/>
 					</div>
 				</div>
 			</div>

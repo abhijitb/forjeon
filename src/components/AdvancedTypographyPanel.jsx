@@ -10,7 +10,8 @@ import { TextShadowControl } from './TextShadowControl';
  */
 export function AdvancedTypographyPanel() {
 	const { selectedBlock, selectedBlockClientId } = useSelect((select) => {
-		const { getSelectedBlock, getSelectedBlockClientId } = select(blockEditorStore);
+		const { getSelectedBlock, getSelectedBlockClientId } =
+			select(blockEditorStore);
 		return {
 			selectedBlock: getSelectedBlock(),
 			selectedBlockClientId: getSelectedBlockClientId(),
@@ -20,11 +21,14 @@ export function AdvancedTypographyPanel() {
 	const { updateBlockAttributes } = useDispatch(blockEditorStore);
 
 	// Check if the selected block supports typography controls
-	const supportsTypography = selectedBlock && isTypographyBlock(selectedBlock.name);
+	const supportsTypography =
+		selectedBlock && isTypographyBlock(selectedBlock.name);
 
 	if (!supportsTypography) {
 		return (
-			<div style={{ padding: '16px', color: '#666', fontStyle: 'italic' }}>
+			<div
+				style={{ padding: '16px', color: '#666', fontStyle: 'italic' }}
+			>
 				{__('Select a text block to customize typography', 'forjeon')}
 			</div>
 		);
@@ -39,27 +43,42 @@ export function AdvancedTypographyPanel() {
 	};
 
 	return (
-		<div className="forjeon-typography-panel" style={{
-			margin: '16px 0'
-		}}>
-
-			<p style={{ margin: '0 0 16px 0', fontSize: '13px', color: '#0073aa' }}>
-				{__('Customize typography for:', 'forjeon')} {selectedBlock?.name.replace('core/', '')}
+		<div
+			className="forjeon-typography-panel"
+			style={{
+				margin: '16px 0',
+			}}
+		>
+			<p
+				style={{
+					margin: '0 0 16px 0',
+					fontSize: '13px',
+					color: '#0073aa',
+				}}
+			>
+				{__('Customize typography for:', 'forjeon')}{' '}
+				{selectedBlock?.name.replace('core/', '')}
 			</p>
-			
+
 			<LineHeightControl
 				value={selectedBlock?.attributes?.lineHeight}
-				onChange={(value) => handleTypographyChange('lineHeight', value)}
+				onChange={(value) =>
+					handleTypographyChange('lineHeight', value)
+				}
 			/>
-			
+
 			<LetterSpacingControl
 				value={selectedBlock?.attributes?.letterSpacing}
-				onChange={(value) => handleTypographyChange('letterSpacing', value)}
+				onChange={(value) =>
+					handleTypographyChange('letterSpacing', value)
+				}
 			/>
-			
+
 			<TextShadowControl
 				value={selectedBlock?.attributes?.textShadow}
-				onChange={(value) => handleTypographyChange('textShadow', value)}
+				onChange={(value) =>
+					handleTypographyChange('textShadow', value)
+				}
 			/>
 		</div>
 	);

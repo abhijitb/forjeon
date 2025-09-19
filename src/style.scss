@@ -8,6 +8,9 @@
 @import "@wordpress/base-styles/variables";
 @import "@wordpress/base-styles/mixins";
 
+// Import block styles
+@import "./blocks/tabs-frontend";
+
 // Forjeon specific variables
 :root {
 	--forjeon-primary: #0073aa;

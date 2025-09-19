@@ -1,0 +1,321 @@
+/**
+ * Tabs Block - Editor Styles
+ *
+ * @package Forjeon
+ * @since 1.0.0
+ */
+
+.forjeon-tabs-editor {
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	margin: 16px 0;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	overflow: hidden;
+
+	.forjeon-tabs-nav {
+		display: flex;
+		border-bottom: 1px solid #dcdcde;
+		background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+		overflow-x: auto;
+		scrollbar-width: thin;
+
+		&::-webkit-scrollbar {
+			height: 4px;
+		}
+
+		&::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background: #c3c4c7;
+			border-radius: 2px;
+		}
+
+		.forjeon-tab-button {
+			flex: 0 0 auto;
+			padding: 14px 20px;
+			border: none;
+			background: none;
+			cursor: pointer;
+			border-bottom: 3px solid transparent;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			font-size: 14px;
+			font-weight: 600;
+			color: #50575e;
+			position: relative;
+			display: flex;
+			align-items: center;
+			white-space: nowrap;
+			min-width: 120px;
+			justify-content: center;
+
+			&::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: rgba(255, 255, 255, 0);
+				transition: background 0.3s ease;
+				border-radius: 0;
+			}
+
+			&:hover {
+				color: #1e1e1e;
+				transform: translateY(-1px);
+
+				&::before {
+					background: rgba(255, 255, 255, 0.5);
+				}
+			}
+
+			&:focus {
+				outline: 2px solid #007cba;
+				outline-offset: -2px;
+			}
+
+			&.active {
+				color: #007cba;
+				border-bottom-color: #007cba;
+				background: #fff;
+				position: relative;
+
+				&::before {
+					background: rgba(255, 255, 255, 0.9);
+				}
+
+				&::after {
+					content: '';
+					position: absolute;
+					bottom: -1px;
+					left: 0;
+					right: 0;
+					height: 1px;
+					background: #fff;
+					z-index: 1;
+				}
+			}
+
+			.forjeon-tab-remove {
+				margin-left: 10px;
+				background: none;
+				border: none;
+				cursor: pointer;
+				color: #d63638;
+				font-size: 18px;
+				line-height: 1;
+				padding: 2px;
+				width: 20px;
+				height: 20px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 50%;
+				opacity: 0.6;
+				transition: all 0.2s ease;
+
+				&:hover {
+					opacity: 1;
+					background-color: rgba(214, 54, 56, 0.1);
+					transform: scale(1.1);
+				}
+
+				&:focus {
+					outline: 1px solid #d63638;
+					outline-offset: 1px;
+				}
+			}
+		}
+	}
+
+	.forjeon-tabs-content {
+		padding: 24px;
+		min-height: 200px;
+		background-color: #fff;
+
+		.forjeon-tab-content-editor {
+			.forjeon-tab-info {
+				margin: 0 0 16px 0;
+				padding: 12px 16px;
+				background: #f0f6fc;
+				border: 1px solid #c8d7e1;
+				border-radius: 6px;
+				color: #0969da;
+				font-size: 13px;
+				font-weight: 500;
+
+				strong {
+					color: #0550ae;
+				}
+			}
+		}
+
+		.forjeon-tab-panel-editor {
+			.forjeon-tab-panel-content {
+				min-height: 120px;
+			}
+		}
+	}
+
+	// Tab style variations
+	&.forjeon-tabs-pills {
+		.forjeon-tabs-nav {
+			background: #f8f9fa;
+			border-bottom: none;
+			padding: 12px;
+			gap: 8px;
+
+			.forjeon-tab-button {
+				border-radius: 25px;
+				border-bottom: none;
+				padding: 12px 20px;
+				background: rgba(255, 255, 255, 0.7);
+				border: 1px solid #dcdcde;
+				min-width: auto;
+
+				&:hover {
+					background: rgba(255, 255, 255, 0.9);
+					transform: translateY(-2px);
+					box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+				}
+
+				&.active {
+					background: #007cba;
+					color: #fff;
+					border-color: #007cba;
+					box-shadow: 0 4px 12px rgba(0, 124, 186, 0.3);
+
+					&::after {
+						display: none;
+					}
+				}
+
+				&::before {
+					border-radius: 25px;
+				}
+			}
+		}
+	}
+
+	&.forjeon-tabs-underline {
+		.forjeon-tabs-nav {
+			background: none;
+			border-bottom: 2px solid #f0f0f1;
+
+			.forjeon-tab-button {
+				border-bottom: 3px solid transparent;
+				background: none;
+
+				&:hover {
+					background: rgba(0, 124, 186, 0.05);
+					border-bottom-color: rgba(0, 124, 186, 0.3);
+				}
+
+				&.active {
+					background: none;
+					border-bottom-color: #007cba;
+					color: #007cba;
+
+					&::before {
+						background: none;
+					}
+
+					&::after {
+						display: none;
+					}
+				}
+
+				&::before {
+					background: none;
+				}
+			}
+		}
+	}
+
+	// Tab alignment
+	&.forjeon-tabs-align-center {
+		.forjeon-tabs-nav {
+			justify-content: center;
+		}
+	}
+
+	&.forjeon-tabs-align-right {
+		.forjeon-tabs-nav {
+			justify-content: flex-end;
+		}
+	}
+}
+
+// Block toolbar styles
+.block-editor-block-toolbar {
+	.components-toolbar-group {
+		.components-toolbar-button {
+			&[aria-label="Add Tab"] {
+				.dashicon {
+					color: #007cba;
+				}
+			}
+		}
+	}
+}
+
+// Inspector panel styles
+.components-panel__body {
+	.forjeon-tab-management {
+		.forjeon-tab-item {
+			margin-bottom: 12px;
+			padding: 12px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			background-color: #f9f9f9;
+
+			.components-text-control__input {
+				margin-bottom: 8px;
+			}
+
+			.components-button-group {
+				gap: 4px;
+			}
+		}
+	}
+}
+
+// Drag and drop styles
+.forjeon-tab-button {
+	&[draggable="true"] {
+		cursor: grab;
+
+		&:active {
+			cursor: grabbing;
+		}
+	}
+
+	&.is-dragging {
+		opacity: 0.5;
+		transform: rotate(2deg);
+	}
+}
+
+// Loading state
+.forjeon-tabs-loading {
+	.forjeon-tabs-content {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #666;
+		font-style: italic;
+	}
+}
+
+// Error state
+.forjeon-tabs-error {
+	border-color: #cc1818;
+
+	.forjeon-tabs-content {
+		background-color: #fef7f7;
+		color: #cc1818;
+		text-align: center;
+	}
+}

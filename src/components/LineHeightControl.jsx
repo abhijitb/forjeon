@@ -1,5 +1,9 @@
 import { __ } from '@wordpress/i18n';
-import { RangeControl, SelectControl, TextControl } from '@wordpress/components';
+import {
+	RangeControl,
+	SelectControl,
+	TextControl,
+} from '@wordpress/components';
 import { useState, useEffect } from '@wordpress/element';
 
 /**
@@ -7,12 +11,17 @@ import { useState, useEffect } from '@wordpress/element';
  * Provides slider and input controls for line height with unit selection
  */
 export function LineHeightControl({ value, onChange }) {
-	const [localValue, setLocalValue] = useState(value || { value: 1.5, unit: '' });
+	const [localValue, setLocalValue] = useState(
+		value || { value: 1.5, unit: '' }
+	);
 	const [inputValue, setInputValue] = useState(value?.value || 1.5);
 
 	// Update local state when prop changes
 	useEffect(() => {
-		if (value && (value.value !== localValue.value || value.unit !== localValue.unit)) {
+		if (
+			value &&
+			(value.value !== localValue.value || value.unit !== localValue.unit)
+		) {
 			setLocalValue(value);
 			setInputValue(value.value);
 		}
@@ -49,7 +58,10 @@ export function LineHeightControl({ value, onChange }) {
 		}
 
 		// Clamp value to valid range
-		const clampedValue = Math.max(defaults.min, Math.min(defaults.max, numValue));
+		const clampedValue = Math.max(
+			defaults.min,
+			Math.min(defaults.max, numValue)
+		);
 		const newLineHeight = {
 			value: clampedValue,
 			unit: localValue.unit,
@@ -138,7 +150,10 @@ export function LineHeightControl({ value, onChange }) {
 							lineHeight: `${localValue.value}${localValue.unit}`,
 						}}
 					>
-						{__('Sample text with current line height to show visual impact of changes', 'forjeon')}
+						{__(
+							'Sample text with current line height to show visual impact of changes',
+							'forjeon'
+						)}
 					</div>
 				</div>
 			</div>

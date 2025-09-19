@@ -1,49 +1,50 @@
 {
-  "name": "forjeon",
-  "version": "1.0.0",
-  "description": "WordPress Gutenberg enhancement plugin with advanced typography controls",
-  "main": "forjeon.php",
-  "scripts": {
-    "build": "wp-scripts build",
-    "start": "wp-scripts start",
-    "format": "wp-scripts format",
-    "lint:css": "wp-scripts lint-style",
-    "lint:js": "wp-scripts lint-js",
-    "lint:php": "composer run-script lint",
-    "test": "wp-scripts test-unit-js",
-    "test:php": "composer run-script test",
-    "packages-update": "wp-scripts packages-update"
-  },
-  "keywords": [
-    "wordpress",
-    "plugin",
-    "gutenberg",
-    "typography",
-    "blocks",
-    "editor"
-  ],
-  "author": "Abhijit Bhatnagar",
-  "license": "GPL-2.0-or-later",
-  "devDependencies": {
-    "@wordpress/scripts": "^27.0.0",
-    "@wordpress/eslint-plugin": "^16.0.0",
-    "@wordpress/prettier-config": "^4.0.0",
-    "eslint": "^8.0.0",
-    "prettier": "^3.0.0"
-  },
-  "dependencies": {
-    "@wordpress/blocks": "^12.0.0",
-    "@wordpress/components": "^25.0.0",
-    "@wordpress/data": "^9.0.0",
-    "@wordpress/element": "^5.0.0",
-    "@wordpress/i18n": "^4.0.0",
-    "@wordpress/plugins": "^5.0.0"
-  },
-  "browserslist": [
-    "extends @wordpress/browserslist-config"
-  ],
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
-  }
+	"name": "forjeon",
+	"version": "1.0.0",
+	"description": "WordPress Gutenberg enhancement plugin with advanced typography controls",
+	"main": "forjeon.php",
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"lint:php": "composer run-script lint",
+		"test": "wp-scripts test-unit-js",
+		"test:php": "composer run-script test",
+		"packages-update": "wp-scripts packages-update"
+	},
+	"keywords": [
+		"wordpress",
+		"plugin",
+		"gutenberg",
+		"typography",
+		"blocks",
+		"editor"
+	],
+	"author": "Abhijit Bhatnagar",
+	"license": "GPL-2.0-or-later",
+	"devDependencies": {
+		"@wordpress/eslint-plugin": "^16.0.0",
+		"@wordpress/prettier-config": "^4.0.0",
+		"@wordpress/scripts": "^27.0.0",
+		"eslint": "^8.0.0",
+		"prettier": "^3.0.0"
+	},
+	"dependencies": {
+		"@wordpress/blocks": "^12.0.0",
+		"@wordpress/components": "^25.0.0",
+		"@wordpress/data": "^9.0.0",
+		"@wordpress/element": "^5.0.0",
+		"@wordpress/i18n": "^4.0.0",
+		"@wordpress/icons": "^10.31.0",
+		"@wordpress/plugins": "^5.0.0"
+	},
+	"browserslist": [
+		"extends @wordpress/browserslist-config"
+	],
+	"engines": {
+		"node": ">=18.0.0",
+		"npm": ">=8.0.0"
+	}
 }

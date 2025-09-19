@@ -1,52 +1,52 @@
 {
-  "name": "forjeon/forjeon",
-  "description": "WordPress Gutenberg enhancement plugin with advanced typography controls",
-  "type": "wordpress-plugin",
-  "license": "GPL-2.0-or-later",
-  "authors": [
-    {
-      "name": "Abhijit Bhatnagar",
-      "email": "abhijit.bhatnagar@gmail.com"
-    }
-  ],
-  "require": {
-    "php": ">=8.2",
-    "composer/installers": "^2.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^10.0",
-    "squizlabs/php_codesniffer": "^3.7",
-    "wp-coding-standards/wpcs": "^3.0",
-    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-    "phpcompatibility/php-compatibility": "^9.3"
-  },
-  "autoload": {
-    "psr-4": {
-      "Forjeon\\": "includes/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Forjeon\\Tests\\": "tests/"
-    }
-  },
-  "scripts": {
-    "test": "phpunit",
-    "test:coverage": "phpunit --coverage-html coverage",
-    "lint": "phpcs --standard=WordPress",
-    "lint:fix": "phpcbf --standard=WordPress",
-    "phpstan": "phpstan analyse",
-    "security": "security-checker security:check"
-  },
-  "config": {
-    "allow-plugins": {
-      "composer/installers": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
-    },
-    "optimize-autoloader": true,
-    "sort-packages": true
-  },
-  "extra": {
-    "installer-name": "forjeon"
-  }
+	"name": "forjeon/forjeon",
+	"description": "WordPress Gutenberg enhancement plugin with advanced typography controls",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"authors": [
+		{
+			"name": "Abhijit Bhatnagar",
+			"email": "abhijit.bhatnagar@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=8.2",
+		"composer/installers": "^2.0"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^10.0",
+		"squizlabs/php_codesniffer": "^3.7",
+		"wp-coding-standards/wpcs": "^3.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"phpcompatibility/php-compatibility": "^9.3"
+	},
+	"autoload": {
+		"psr-4": {
+			"Forjeon\\": "includes/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Forjeon\\Tests\\": "tests/"
+		}
+	},
+	"scripts": {
+		"test": "phpunit",
+		"test:coverage": "phpunit --coverage-html coverage",
+		"lint": "phpcs --standard=WordPress",
+		"lint:fix": "phpcbf --standard=WordPress",
+		"phpstan": "phpstan analyse",
+		"security": "security-checker security:check"
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"optimize-autoloader": true,
+		"sort-packages": true
+	},
+	"extra": {
+		"installer-name": "forjeon"
+	}
 }

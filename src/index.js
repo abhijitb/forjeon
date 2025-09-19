@@ -12,7 +12,7 @@ import './style.scss';
 // Register the custom toolbar plugin
 registerPlugin('forjeon-toolbar', {
 	render: CustomSidebar,
-	icon: 'admin-customizer'
+	icon: 'admin-customizer',
 });
 
 // Add a Higher Order Component to apply inline styles to blocks
@@ -20,7 +20,7 @@ const withTypographyStyles = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
 		const { attributes, name, setAttributes, clientId } = props;
 		const { lineHeight, letterSpacing, textShadow } = attributes;
-		
+
 		// Check if this block supports typography
 		const typographyBlocks = [
 			'core/paragraph',
@@ -30,48 +30,69 @@ const withTypographyStyles = createHigherOrderComponent((BlockEdit) => {
 			'core/pullquote',
 			'core/verse',
 			'core/code',
-			'core/preformatted'
+			'core/preformatted',
 		];
-		
+
 		if (!typographyBlocks.includes(name)) {
 			return <BlockEdit {...props} />;
 		}
-		
+
 		// Build inline styles for the wrapper
 		const wrapperStyles = {};
-		
+
 		// Only apply styles if they exist and have valid values
-		if (lineHeight && lineHeight.value !== undefined && lineHeight.value !== null) {
+		if (
+			lineHeight &&
+			lineHeight.value !== undefined &&
+			lineHeight.value !== null
+		) {
 			wrapperStyles.lineHeight = `${lineHeight.value}${lineHeight.unit || ''}`;
 		}
-		
-		if (letterSpacing?.value !== undefined && letterSpacing?.value !== null) {
+
+		if (
+			letterSpacing?.value !== undefined &&
+			letterSpacing?.value !== null
+		) {
 			wrapperStyles.letterSpacing = `${letterSpacing.value}${letterSpacing.unit || 'em'}`;
 		}
-		
-		if (textShadow && typeof textShadow === 'object' && textShadow.x !== undefined) {
+
+		if (
+			textShadow &&
+			typeof textShadow === 'object' &&
+			textShadow.x !== undefined
+		) {
 			const { x = 0, y = 0, blur = 0, color = '#000000' } = textShadow;
 			wrapperStyles.textShadow = `${x}px ${y}px ${blur}px ${color}`;
 		}
-		
+
 		// Apply styles to the entire block wrapper using CSS
 		const hasStyles = Object.keys(wrapperStyles).length > 0;
-		const uniqueClassName = hasStyles ? `forjeon-typography-wrapper-${clientId}` : '';
-		
+		const uniqueClassName = hasStyles
+			? `forjeon-typography-wrapper-${clientId}`
+			: '';
+
 		// Return the block with applied styles
 		return (
-			<div 
-				style={hasStyles ? {
-					...wrapperStyles,
-					// Apply styles to all child text elements
-					'--forjeon-line-height': wrapperStyles.lineHeight,
-					'--forjeon-letter-spacing': wrapperStyles.letterSpacing,
-					'--forjeon-text-shadow': wrapperStyles.textShadow
-				} : {}} 
+			<div
+				style={
+					hasStyles
+						? {
+								...wrapperStyles,
+								// Apply styles to all child text elements
+								'--forjeon-line-height':
+									wrapperStyles.lineHeight,
+								'--forjeon-letter-spacing':
+									wrapperStyles.letterSpacing,
+								'--forjeon-text-shadow':
+									wrapperStyles.textShadow,
+							}
+						: {}
+				}
 				className={uniqueClassName}
 			>
 				<style>
-					{hasStyles && `
+					{hasStyles &&
+						`
 						.${uniqueClassName} p,
 						.${uniqueClassName} h1,
 						.${uniqueClassName} h2,

@@ -1,0 +1,475 @@
+/**
+ * Tabs Block - Frontend Styles
+ *
+ * @package Forjeon
+ * @since 1.0.0
+ */
+
+.forjeon-tabs-container {
+	margin: 1.5rem 0;
+	font-family: inherit;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	border: 1px solid #e5e7eb;
+
+	// Tab Navigation
+	.forjeon-tabs-nav {
+		display: flex;
+		flex-wrap: wrap;
+		border-bottom: 1px solid #e5e7eb;
+		margin-bottom: 0;
+		list-style: none;
+		padding: 0;
+		background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+		overflow-x: auto;
+		scrollbar-width: thin;
+
+		&::-webkit-scrollbar {
+			height: 3px;
+		}
+
+		&::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background: #d1d5db;
+			border-radius: 2px;
+		}
+
+		.forjeon-tab-button {
+			flex: 0 0 auto;
+			padding: 1rem 1.5rem;
+			border: none;
+			background: none;
+			cursor: pointer;
+			border-bottom: 3px solid transparent;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			font-size: 0.95rem;
+			font-weight: 600;
+			color: #6b7280;
+			text-decoration: none;
+			position: relative;
+			white-space: nowrap;
+			min-width: 120px;
+			text-align: center;
+
+			&::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: rgba(255, 255, 255, 0);
+				transition: background 0.3s ease;
+			}
+
+			&:hover {
+				color: #374151;
+				transform: translateY(-1px);
+
+				&::before {
+					background: rgba(255, 255, 255, 0.6);
+				}
+			}
+
+			&:focus {
+				outline: 2px solid #3b82f6;
+				outline-offset: -2px;
+				z-index: 10;
+			}
+
+			&.active,
+			&[aria-selected="true"] {
+				color: #3b82f6;
+				border-bottom-color: #3b82f6;
+				background: #fff;
+				position: relative;
+
+				&::before {
+					background: rgba(255, 255, 255, 0.95);
+				}
+
+				&::after {
+					content: '';
+					position: absolute;
+					bottom: -1px;
+					left: 0;
+					right: 0;
+					height: 1px;
+					background: #fff;
+					z-index: 1;
+				}
+			}
+		}
+	}
+
+	// Tab Content
+	.forjeon-tabs-content {
+		background: #fff;
+		
+		.forjeon-tab-panel {
+			padding: 2rem;
+			
+			&[hidden] {
+				display: none;
+			}
+
+			&:focus {
+				outline: none;
+			}
+
+			.forjeon-tab-content {
+				line-height: 1.6;
+
+				> *:first-child {
+					margin-top: 0;
+				}
+
+				> *:last-child {
+					margin-bottom: 0;
+				}
+
+				p {
+					margin-bottom: 1rem;
+				}
+
+				h1, h2, h3, h4, h5, h6 {
+					margin-top: 1.5rem;
+					margin-bottom: 0.75rem;
+					color: #1f2937;
+				}
+
+				ul, ol {
+					margin-bottom: 1rem;
+					padding-left: 1.5rem;
+				}
+
+				blockquote {
+					margin: 1.5rem 0;
+					padding: 1rem 1.5rem;
+					border-left: 4px solid #3b82f6;
+					background: #f8fafc;
+					font-style: italic;
+				}
+
+				code {
+					background: #f3f4f6;
+					padding: 0.25rem 0.5rem;
+					border-radius: 4px;
+					font-size: 0.9em;
+				}
+
+				pre {
+					background: #1f2937;
+					color: #f9fafb;
+					padding: 1rem;
+					border-radius: 6px;
+					overflow-x: auto;
+					margin: 1rem 0;
+				}
+			}
+		}
+	}
+
+	// Style variations
+	&[data-tab-style="pills"],
+	&.forjeon-tabs-pills {
+		box-shadow: none;
+		border: none;
+		border-radius: 0;
+		overflow: visible;
+
+		.forjeon-tabs-nav {
+			border-bottom: none;
+			gap: 0.5rem;
+			padding: 1rem;
+			background: #f8fafc;
+			border-radius: 12px;
+			margin-bottom: 1rem;
+
+			.forjeon-tab-button {
+				border-radius: 25px;
+				border-bottom: none;
+				padding: 0.75rem 1.25rem;
+				background: rgba(255, 255, 255, 0.8);
+				border: 1px solid #e2e8f0;
+				min-width: auto;
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+				&::before {
+					border-radius: 25px;
+				}
+
+				&::after {
+					display: none;
+				}
+
+				&:hover {
+					background: rgba(255, 255, 255, 0.95);
+					transform: translateY(-2px);
+					box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+				}
+
+				&.active,
+				&[aria-selected="true"] {
+					background: #3b82f6;
+					color: #fff;
+					border-color: #3b82f6;
+					box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+
+					&::before {
+						background: none;
+					}
+				}
+			}
+		}
+
+		.forjeon-tabs-content {
+			border-radius: 12px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+			border: 1px solid #e2e8f0;
+		}
+	}
+
+	&[data-tab-style="underline"],
+	&.forjeon-tabs-underline {
+		.forjeon-tabs-nav {
+			background: none;
+			border-bottom: 2px solid #f1f5f9;
+
+			.forjeon-tab-button {
+				border-bottom: 3px solid transparent;
+				background: none;
+
+				&::before {
+					display: none;
+				}
+
+				&::after {
+					display: none;
+				}
+
+				&:hover {
+					background: rgba(59, 130, 246, 0.05);
+					border-bottom-color: rgba(59, 130, 246, 0.3);
+					transform: none;
+				}
+
+				&.active,
+				&[aria-selected="true"] {
+					background: none;
+					border-bottom-color: #3b82f6;
+					color: #3b82f6;
+				}
+			}
+		}
+	}
+
+	// Tab alignment
+	&[data-tab-alignment="center"],
+	&.forjeon-tabs-align-center {
+		.forjeon-tabs-nav {
+			justify-content: center;
+		}
+	}
+
+	&[data-tab-alignment="right"],
+	&.forjeon-tabs-align-right {
+		.forjeon-tabs-nav {
+			justify-content: flex-end;
+		}
+	}
+
+	// Accordion styles for mobile
+	.forjeon-accordion-header {
+		display: none;
+		width: 100%;
+		padding: 0.75rem 1rem;
+		border: 1px solid #e0e0e0;
+		background-color: #f8f9fa;
+		text-align: left;
+		cursor: pointer;
+		position: relative;
+		font-weight: 500;
+		color: #333;
+		margin-bottom: 0;
+
+		&:hover {
+			background-color: #e9ecef;
+		}
+
+		&:focus {
+			outline: 2px solid #007cba;
+			outline-offset: -2px;
+		}
+
+		&[aria-expanded="true"] {
+			background-color: #007cba;
+			color: #fff;
+			border-color: #007cba;
+
+			.forjeon-accordion-icon::after {
+				transform: rotate(180deg);
+			}
+		}
+
+		.forjeon-accordion-icon {
+			position: absolute;
+			right: 1rem;
+			top: 50%;
+			transform: translateY(-50%);
+
+			&::after {
+				content: '▼';
+				font-size: 0.7rem;
+				transition: transform 0.3s ease;
+			}
+		}
+	}
+
+	// Mobile responsive behavior
+	@media (max-width: 768px) {
+		&[data-enable-accordion="true"] {
+			.forjeon-tabs-nav {
+				display: none;
+			}
+
+			.forjeon-accordion-header {
+				display: block;
+			}
+
+			.forjeon-tab-panel {
+				padding: 0;
+				margin-bottom: 0.5rem;
+
+				&:not(.active) .forjeon-tab-content {
+					display: none;
+				}
+
+				.forjeon-tab-content {
+					padding: 1rem;
+					border: 1px solid #e0e0e0;
+					border-top: none;
+				}
+			}
+		}
+	}
+
+	// Animations
+	.forjeon-tab-panel {
+		.forjeon-tab-content {
+			animation: fadeIn 0.3s ease-in-out;
+		}
+	}
+
+	// Loading state
+	&.forjeon-tabs-loading {
+		.forjeon-tabs-content {
+			min-height: 200px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #666;
+
+			&::after {
+				content: 'Loading...';
+			}
+		}
+	}
+
+	// No JavaScript fallback
+	.no-js & {
+		.forjeon-tab-panel {
+			display: block !important;
+			padding: 1rem 0;
+			border-top: 1px solid #e0e0e0;
+
+			&:first-child {
+				border-top: none;
+			}
+		}
+
+		.forjeon-tabs-nav {
+			display: none;
+		}
+
+		.forjeon-accordion-header {
+			display: block;
+			margin-bottom: 0.5rem;
+			cursor: default;
+		}
+	}
+}
+
+// Keyframe animations
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+	.forjeon-tabs-container {
+		.forjeon-tabs-nav {
+			.forjeon-tab-button {
+				border: 1px solid;
+
+				&.active {
+					background-color: #000;
+					color: #fff;
+				}
+			}
+		}
+	}
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+	.forjeon-tabs-container {
+		.forjeon-tab-button,
+		.forjeon-accordion-header,
+		.forjeon-accordion-icon::after {
+			transition: none;
+		}
+
+		.forjeon-tab-panel .forjeon-tab-content {
+			animation: none;
+		}
+	}
+}
+
+// Print styles
+@media print {
+	.forjeon-tabs-container {
+		.forjeon-tabs-nav {
+			display: none;
+		}
+
+		.forjeon-tab-panel {
+			display: block !important;
+			page-break-inside: avoid;
+			padding: 1rem 0;
+			border-top: 1px solid #000;
+
+			&:first-child {
+				border-top: none;
+			}
+		}
+
+		.forjeon-accordion-header {
+			display: block;
+			margin-bottom: 0.5rem;
+			border: 1px solid #000;
+			background: none;
+		}
+	}
+}
