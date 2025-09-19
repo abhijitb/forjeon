@@ -40,16 +40,9 @@ export function AdvancedTypographyPanel() {
 
 	return (
 		<div className="forjeon-typography-panel" style={{
-			padding: '16px',
-			background: '#f6f7f7',
-			border: '2px solid #0073aa',
-			borderRadius: '8px',
 			margin: '16px 0'
 		}}>
-			<h3 style={{ margin: '0 0 16px 0', color: '#0073aa' }}>
-				🎨 {__('Forjeon Advanced Typography', 'forjeon')}
-			</h3>
-			
+
 			<p style={{ margin: '0 0 16px 0', fontSize: '13px', color: '#0073aa' }}>
 				{__('Customize typography for:', 'forjeon')} {selectedBlock?.name.replace('core/', '')}
 			</p>

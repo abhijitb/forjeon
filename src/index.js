@@ -9,8 +9,8 @@ import { createHigherOrderComponent } from '@wordpress/compose';
 import { CustomSidebar } from './components/CustomSidebar';
 import './style.scss';
 
-// Register the custom sidebar plugin
-registerPlugin('forjeon-typography-sidebar', {
+// Register the custom toolbar plugin
+registerPlugin('forjeon-toolbar', {
 	render: CustomSidebar,
 	icon: 'admin-customizer'
 });
@@ -18,7 +18,7 @@ registerPlugin('forjeon-typography-sidebar', {
 // Add a Higher Order Component to apply inline styles to blocks
 const withTypographyStyles = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
-		const { attributes, name, setAttributes } = props;
+		const { attributes, name, setAttributes, clientId } = props;
 		const { lineHeight, letterSpacing, textShadow } = attributes;
 		
 		// Check if this block supports typography
@@ -56,6 +56,7 @@ const withTypographyStyles = createHigherOrderComponent((BlockEdit) => {
 		
 		// Apply styles to the entire block wrapper using CSS
 		const hasStyles = Object.keys(wrapperStyles).length > 0;
+		const uniqueClassName = hasStyles ? `forjeon-typography-wrapper-${clientId}` : '';
 		
 		// Return the block with applied styles
 		return (
@@ -67,22 +68,22 @@ const withTypographyStyles = createHigherOrderComponent((BlockEdit) => {
 					'--forjeon-letter-spacing': wrapperStyles.letterSpacing,
 					'--forjeon-text-shadow': wrapperStyles.textShadow
 				} : {}} 
-				className={hasStyles ? 'forjeon-typography-wrapper' : ''}
+				className={uniqueClassName}
 			>
 				<style>
 					{hasStyles && `
-						.forjeon-typography-wrapper p,
-						.forjeon-typography-wrapper h1,
-						.forjeon-typography-wrapper h2,
-						.forjeon-typography-wrapper h3,
-						.forjeon-typography-wrapper h4,
-						.forjeon-typography-wrapper h5,
-						.forjeon-typography-wrapper h6,
-						.forjeon-typography-wrapper ul,
-						.forjeon-typography-wrapper ol,
-						.forjeon-typography-wrapper blockquote,
-						.forjeon-typography-wrapper pre,
-						.forjeon-typography-wrapper code {
+						.${uniqueClassName} p,
+						.${uniqueClassName} h1,
+						.${uniqueClassName} h2,
+						.${uniqueClassName} h3,
+						.${uniqueClassName} h4,
+						.${uniqueClassName} h5,
+						.${uniqueClassName} h6,
+						.${uniqueClassName} ul,
+						.${uniqueClassName} ol,
+						.${uniqueClassName} blockquote,
+						.${uniqueClassName} pre,
+						.${uniqueClassName} code {
 							${wrapperStyles.lineHeight ? `line-height: ${wrapperStyles.lineHeight} !important;` : ''}
 							${wrapperStyles.letterSpacing ? `letter-spacing: ${wrapperStyles.letterSpacing} !important;` : ''}
 							${wrapperStyles.textShadow ? `text-shadow: ${wrapperStyles.textShadow} !important;` : ''}

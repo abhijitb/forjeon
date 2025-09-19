@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { PluginSidebar } from '@wordpress/editor';
+import { PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/editor';
 import { PanelBody } from '@wordpress/components';
 import { AdvancedTypographyPanel } from './AdvancedTypographyPanel';
 
@@ -9,19 +9,26 @@ import { AdvancedTypographyPanel } from './AdvancedTypographyPanel';
  */
 export function CustomSidebar() {
 	return (
-		<PluginSidebar
-			name="forjeon-typography-sidebar"
-			title={__('Forjeon Typography', 'forjeon')}
-			className="forjeon-typography-sidebar"
-			icon="admin-customizer"
-			isPinnable={true}
-		>
-			<PanelBody
-				title={__('Typography Controls', 'forjeon')}
-				initialOpen={true}
+		<>
+			<PluginSidebarMoreMenuItem
+				target="forjeon-toolbar"
+				icon="admin-customizer"
 			>
-				<AdvancedTypographyPanel />
-			</PanelBody>
-		</PluginSidebar>
+				{__('Forjeon Toolbar', 'forjeon')}
+			</PluginSidebarMoreMenuItem>
+			<PluginSidebar
+				name="forjeon-toolbar"
+				title={__('Forjeon Toolbar', 'forjeon')}
+				className="forjeon-toolbar-sidebar"
+				icon="admin-customizer"
+			>
+				<PanelBody
+					title={__('Typography Controls', 'forjeon')}
+					initialOpen={true}
+				>
+					<AdvancedTypographyPanel />
+				</PanelBody>
+			</PluginSidebar>
+		</>
 	);
 }
