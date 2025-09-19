@@ -16,6 +16,85 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Render tabs navigation HTML
+ *
+ * @param array $tabs Array of tab data.
+ * @param int   $active_tab Currently active tab index.
+ * @return string Navigation HTML.
+ */
+function render_tabs_navigation( $tabs, $active_tab ) {
+	$nav_html = '<div class="forjeon-tabs-nav" role="tablist" aria-orientation="horizontal">';
+	
+	foreach ( $tabs as $index => $tab ) {
+		$tab_id = sanitize_html_class( $tab['id'] ?? 'tab-' . $index );
+		$is_active = $index === $active_tab;
+		$title = esc_html( $tab['title'] ?? sprintf( __( 'Tab %d', 'forjeon' ), $index + 1 ) );
+		
+		$nav_html .= sprintf(
+			'<button class="forjeon-tab-button %s" role="tab" id="%s" aria-controls="%s" aria-selected="%s" tabindex="%s" data-tab-index="%s">%s</button>',
+			$is_active ? 'active' : '',
+			esc_attr( $tab_id . '-button' ),
+			esc_attr( $tab_id . '-panel' ),
+			$is_active ? 'true' : 'false',
+			$is_active ? '0' : '-1',
+			esc_attr( $index ),
+			$title
+		);
+	}
+	
+	$nav_html .= '</div>';
+	return $nav_html;
+}
+
+/**
+ * Render tab panel HTML
+ *
+ * @param array $tab Tab data.
+ * @param int   $index Tab index.
+ * @param bool  $is_active Whether tab is active.
+ * @param bool  $enable_accordion Whether accordion is enabled.
+ * @return string Panel HTML.
+ */
+function render_tab_panel( $tab, $index, $is_active, $enable_accordion ) {
+	$tab_id = sanitize_html_class( $tab['id'] ?? 'tab-' . $index );
+	$title = esc_html( $tab['title'] ?? sprintf( __( 'Tab %d', 'forjeon' ), $index + 1 ) );
+	$content = $tab['content'] ?? '';
+	
+	$panel_html = sprintf(
+		'<div class="forjeon-tab-panel %s" role="tabpanel" id="%s" aria-labelledby="%s" tabindex="0" %s>',
+		$is_active ? 'active' : '',
+		esc_attr( $tab_id . '-panel' ),
+		esc_attr( $tab_id . '-button' ),
+		$is_active ? '' : 'hidden'
+	);
+	
+	// Add accordion header for mobile
+	if ( $enable_accordion ) {
+		$panel_html .= sprintf(
+			'<button class="forjeon-accordion-header" aria-expanded="%s" aria-controls="%s" data-tab-index="%s">%s<span class="forjeon-accordion-icon" aria-hidden="true"></span></button>',
+			$is_active ? 'true' : 'false',
+			esc_attr( $tab_id . '-content' ),
+			esc_attr( $index ),
+			$title
+		);
+	}
+	
+	// Add tab content
+	$panel_html .= sprintf( '<div class="forjeon-tab-content" id="%s">', esc_attr( $tab_id . '-content' ) );
+	
+	if ( ! empty( $content ) ) {
+		$panel_html .= wp_kses_post( $content );
+	} else {
+		$panel_html .= '<p>' . esc_html__( 'Add content to this tab in the editor.', 'forjeon' ) . '</p>';
+	}
+	
+	$panel_html .= '</div></div>';
+	
+	return $panel_html;
+}
+
+// Extract attributes
 $tabs = $attributes['tabs'] ?? array();
 $active_tab = $attributes['activeTab'] ?? 0;
 $tab_style = $attributes['tabStyle'] ?? 'default';
@@ -23,10 +102,13 @@ $tab_alignment = $attributes['tabAlignment'] ?? 'left';
 $enable_accordion = $attributes['enableAccordionOnMobile'] ?? true;
 $mobile_breakpoint = $attributes['mobileBreakpoint'] ?? 768;
 
-// Generate unique ID for this tabs instance
-$tabs_id = 'forjeon-tabs-' . wp_unique_id();
+// Early return for empty tabs
+if ( empty( $tabs ) ) {
+	return '<div class="forjeon-tabs-debug">No tabs data found. Attributes: ' . wp_json_encode( $attributes ) . '</div>';
+}
 
-// Build class string
+// Generate unique ID and classes
+$tabs_id = 'forjeon-tabs-' . wp_unique_id();
 $classes = array(
 	'forjeon-tabs-container',
 	'forjeon-tabs-' . $tab_style,
@@ -43,79 +125,16 @@ $wrapper_attributes = get_block_wrapper_attributes( array(
 	'data-mobile-breakpoint' => $mobile_breakpoint
 ) );
 
-if ( empty( $tabs ) ) {
-	return '<div class="forjeon-tabs-debug">No tabs data found. Attributes: ' . wp_json_encode( $attributes ) . '</div>';
+// Build HTML using string concatenation
+$html = sprintf( '<div %s>', $wrapper_attributes );
+$html .= render_tabs_navigation( $tabs, $active_tab );
+$html .= '<div class="forjeon-tabs-content">';
+
+foreach ( $tabs as $index => $tab ) {
+	$is_active = $index === $active_tab;
+	$html .= render_tab_panel( $tab, $index, $is_active, $enable_accordion );
 }
 
-ob_start();
-?>
-<div <?php echo $wrapper_attributes; ?>>
-	<!-- Tab Navigation -->
-	<div class="forjeon-tabs-nav" role="tablist" aria-orientation="horizontal">
-		<?php foreach ( $tabs as $index => $tab ) : 
-			$tab_id = sanitize_html_class( $tab['id'] ?? 'tab-' . $index );
-			$is_active = $index === $active_tab;
-		?>
-			<button
-				class="forjeon-tab-button <?php echo $is_active ? 'active' : ''; ?>"
-				role="tab"
-				id="<?php echo esc_attr( $tab_id . '-button' ); ?>"
-				aria-controls="<?php echo esc_attr( $tab_id . '-panel' ); ?>"
-				aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>"
-				tabindex="<?php echo $is_active ? '0' : '-1'; ?>"
-				data-tab-index="<?php echo esc_attr( $index ); ?>"
-			>
-				<?php echo esc_html( $tab['title'] ?? sprintf( __( 'Tab %d', 'forjeon' ), $index + 1 ) ); ?>
-			</button>
-		<?php endforeach; ?>
-	</div>
+$html .= '</div></div>';
 
-	<!-- Tab Panels -->
-	<div class="forjeon-tabs-content">
-		<?php 
-		foreach ( $tabs as $index => $tab ) : 
-			$tab_id = sanitize_html_class( $tab['id'] ?? 'tab-' . $index );
-			$is_active = $index === $active_tab;
-		?>
-			<div
-				class="forjeon-tab-panel <?php echo $is_active ? 'active' : ''; ?>"
-				role="tabpanel"
-				id="<?php echo esc_attr( $tab_id . '-panel' ); ?>"
-				aria-labelledby="<?php echo esc_attr( $tab_id . '-button' ); ?>"
-				tabindex="0"
-				<?php echo $is_active ? '' : 'hidden'; ?>
-			>
-				<?php if ( $enable_accordion ) : ?>
-					<!-- Mobile accordion header -->
-					<button
-						class="forjeon-accordion-header"
-						aria-expanded="<?php echo $is_active ? 'true' : 'false'; ?>"
-						aria-controls="<?php echo esc_attr( $tab_id . '-content' ); ?>"
-						data-tab-index="<?php echo esc_attr( $index ); ?>"
-					>
-						<?php echo esc_html( $tab['title'] ?? sprintf( __( 'Tab %d', 'forjeon' ), $index + 1 ) ); ?>
-						<span class="forjeon-accordion-icon" aria-hidden="true"></span>
-					</button>
-				<?php endif; ?>
-				
-				<div 
-					class="forjeon-tab-content"
-					id="<?php echo esc_attr( $tab_id . '-content' ); ?>"
-				>
-					<?php 
-					// Display the tab content from attributes
-					$tab_content = $tab['content'] ?? '';
-					if ( ! empty( $tab_content ) ) {
-						echo wp_kses_post( $tab_content );
-					} else {
-						echo '<p>' . esc_html__( 'Add content to this tab in the editor.', 'forjeon' ) . '</p>';
-					}
-					?>
-				</div>
-			</div>
-		<?php endforeach; ?>
-	</div>
-</div>
-
-<?php
-return ob_get_clean();
+return $html;
