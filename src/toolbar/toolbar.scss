@@ -1,0 +1,438 @@
+/**
+ * Forjeon Toolbar Styles
+ * 
+ * @package Forjeon
+ * @since 1.0.0
+ */
+
+/* Toolbar Toggle Button */
+.forjeon-toolbar-toggle {
+	position: fixed;
+	top: 60px;
+	right: 20px;
+	z-index: 99999;
+	
+	.forjeon-toolbar-toggle-button {
+		background: #0073aa !important;
+		border-color: #0073aa !important;
+		box-shadow: 0 2px 8px rgba(0, 115, 170, 0.3);
+		font-weight: 600;
+		
+		&:hover {
+			background: #005a87 !important;
+			border-color: #005a87 !important;
+			transform: translateY(-1px);
+			box-shadow: 0 4px 12px rgba(0, 115, 170, 0.4);
+		}
+		
+		&:focus {
+			box-shadow: 0 0 0 2px #fff, 0 0 0 4px #0073aa;
+		}
+	}
+}
+
+/* Main Toolbar Container */
+.forjeon-toolbar {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-size: 13px;
+	line-height: 1.4;
+	color: #1e1e1e;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+	width: 380px;
+	max-height: 80vh;
+	overflow: hidden;
+	z-index: 100000;
+
+	&.is-minimized {
+		height: 50px;
+		overflow: hidden;
+
+		.forjeon-toolbar-content {
+			display: none;
+		}
+	}
+
+	&.is-docked {
+		position: fixed !important;
+		top: 46px;
+		right: 0;
+		border-radius: 8px 0 0 8px;
+		border-right: none;
+	}
+}
+
+/* Floating Panel Styles */
+.forjeon-floating-panel {
+	user-select: none;
+	
+	&.is-dragging {
+		opacity: 0.9;
+		transform: scale(1.02);
+		transition: transform 0.1s ease;
+	}
+}
+
+/* Drag Handle */
+.forjeon-panel-drag-handle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 32px;
+	background: linear-gradient(135deg, #f7f8f9 0%, #e8eaed 100%);
+	border-bottom: 1px solid #ddd;
+	cursor: move;
+	transition: background 0.2s ease;
+
+	&:hover {
+		background: linear-gradient(135deg, #e8eaed 0%, #d3d6da 100%);
+	}
+
+	.forjeon-drag-indicator {
+		display: flex;
+		gap: 3px;
+
+		span {
+			width: 4px;
+			height: 4px;
+			background: #8c8f94;
+			border-radius: 50%;
+			transition: background 0.2s ease;
+		}
+	}
+
+	&:hover .forjeon-drag-indicator span {
+		background: #646970;
+	}
+}
+
+/* Toolbar Header */
+.forjeon-toolbar-header {
+	padding: 12px 16px 8px;
+	border-bottom: 1px solid #f0f0f1;
+	background: linear-gradient(135deg, #f9f9f9 0%, #f3f4f5 100%);
+
+	h3 {
+		margin: 0;
+		font-size: 14px;
+		font-weight: 600;
+		color: #1e1e1e;
+	}
+
+	.forjeon-toolbar-subtitle {
+		font-size: 12px;
+		color: #646970;
+		margin-top: 2px;
+	}
+}
+
+/* Controls Container */
+.forjeon-toolbar-controls {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 8px;
+}
+
+.forjeon-minimize-button,
+.forjeon-close-button {
+	padding: 4px 8px;
+	font-size: 11px;
+	border-radius: 4px;
+	border: 1px solid #ddd;
+	background: #f7f8f9;
+	color: #646970;
+	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: #fff;
+		border-color: #999;
+		color: #1e1e1e;
+	}
+}
+
+/* Tab Panel Styles */
+.forjeon-tab-panel {
+	.forjeon-tab-list {
+		display: flex;
+		background: #f6f7f7;
+		border-bottom: 1px solid #ddd;
+		overflow-x: auto;
+		scrollbar-width: none;
+		
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+
+	.forjeon-tab-button {
+		flex: 1;
+		min-width: 0;
+		padding: 10px 8px;
+		border: none;
+		border-right: 1px solid #e0e0e0;
+		background: transparent;
+		color: #646970;
+		font-size: 11px;
+		font-weight: 500;
+		text-align: center;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		position: relative;
+		
+		&:last-child {
+			border-right: none;
+		}
+
+		&:hover:not(.is-disabled) {
+			background: rgba(0, 123, 255, 0.05);
+			color: #0073aa;
+		}
+
+		&.is-active {
+			background: #fff;
+			color: #0073aa;
+			box-shadow: inset 0 -2px 0 #0073aa;
+		}
+
+		&.is-disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+			
+			&:hover {
+				background: transparent;
+				color: #646970;
+			}
+		}
+
+		.forjeon-tab-icon {
+			display: block;
+			font-size: 14px;
+			margin-bottom: 2px;
+		}
+
+		.forjeon-tab-label {
+			display: block;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.forjeon-tab-badge {
+			position: absolute;
+			top: 2px;
+			right: 2px;
+			background: #ff6b35;
+			color: #fff;
+			font-size: 8px;
+			padding: 1px 4px;
+			border-radius: 8px;
+			font-weight: 600;
+		}
+	}
+}
+
+/* Tab Content */
+.forjeon-tab-content {
+	padding: 16px;
+	max-height: 60vh;
+	overflow-y: auto;
+	
+	&::-webkit-scrollbar {
+		width: 6px;
+	}
+	
+	&::-webkit-scrollbar-track {
+		background: #f1f1f1;
+		border-radius: 3px;
+	}
+	
+	&::-webkit-scrollbar-thumb {
+		background: #c1c1c1;
+		border-radius: 3px;
+		
+		&:hover {
+			background: #a1a1a1;
+		}
+	}
+}
+
+/* Tab Placeholder Styles */
+.forjeon-tab-placeholder {
+	text-align: center;
+	padding: 20px;
+	
+	h3 {
+		margin: 0 0 12px;
+		font-size: 16px;
+		color: #1e1e1e;
+	}
+	
+	p {
+		margin: 0 0 16px;
+		color: #646970;
+		font-size: 13px;
+	}
+	
+	ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		text-align: left;
+		
+		li {
+			padding: 6px 0;
+			color: #646970;
+			font-size: 12px;
+			border-bottom: 1px solid #f0f0f1;
+			
+			&:last-child {
+				border-bottom: none;
+			}
+		}
+	}
+}
+
+/* Typography Tab Specific Styles */
+.forjeon-typography-tab {
+	.forjeon-control-group {
+		margin-bottom: 20px;
+		
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+	
+	.forjeon-control-label {
+		display: block;
+		margin-bottom: 6px;
+		font-size: 12px;
+		font-weight: 500;
+		color: #1e1e1e;
+	}
+	
+	.forjeon-font-family-select,
+	.forjeon-font-size-input,
+	.forjeon-line-height-input {
+		width: 100%;
+		padding: 6px 8px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		font-size: 13px;
+		background: #fff;
+		
+		&:focus {
+			outline: none;
+			border-color: #0073aa;
+			box-shadow: 0 0 0 1px #0073aa;
+		}
+	}
+	
+	.forjeon-font-weight-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 4px;
+		margin-top: 6px;
+		
+		button {
+			padding: 6px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			background: #fff;
+			font-size: 11px;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			
+			&:hover {
+				border-color: #0073aa;
+			}
+			
+			&.is-active {
+				background: #0073aa;
+				color: #fff;
+				border-color: #0073aa;
+			}
+		}
+	}
+	
+	.forjeon-color-controls {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 12px;
+		
+		.forjeon-color-control {
+			.forjeon-color-picker {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin-top: 6px;
+				
+				input[type="color"] {
+					width: 32px;
+					height: 32px;
+					border: 1px solid #ddd;
+					border-radius: 4px;
+					cursor: pointer;
+					background: none;
+					padding: 0;
+					
+					&::-webkit-color-swatch-wrapper {
+						padding: 0;
+					}
+					
+					&::-webkit-color-swatch {
+						border: none;
+						border-radius: 3px;
+					}
+				}
+				
+				input[type="text"] {
+					flex: 1;
+					padding: 6px 8px;
+					border: 1px solid #ddd;
+					border-radius: 4px;
+					font-size: 12px;
+					font-family: Monaco, 'Courier New', monospace;
+				}
+			}
+		}
+	}
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+	.forjeon-toolbar {
+		width: calc(100vw - 20px);
+		max-width: 380px;
+	}
+	
+	.forjeon-tab-button {
+		.forjeon-tab-label {
+			font-size: 10px;
+		}
+		
+		.forjeon-tab-icon {
+			font-size: 12px;
+		}
+	}
+	
+	.forjeon-typography-tab {
+		.forjeon-color-controls {
+			grid-template-columns: 1fr;
+		}
+	}
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	.forjeon-toolbar {
+		border-width: 0.5px;
+	}
+	
+	.forjeon-tab-panel .forjeon-tab-list .forjeon-tab-button {
+		border-right-width: 0.5px;
+	}
+}

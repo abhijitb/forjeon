@@ -160,7 +160,7 @@ class Plugin {
 		// Enqueue block editor styles
 		wp_enqueue_style(
 			'forjeon-block-editor',
-			FORJEON_PLUGIN_URL . 'build/style-index.css',
+			FORJEON_PLUGIN_URL . 'build/index.css',
 			array(),
 			$asset_file['version']
 		);

@@ -1,18 +1,31 @@
 /**
- * Forjeon - Advanced Typography Controls
+ * Forjeon - Advanced Block Editor Enhancement Suite
  * Main entry point for block editor integration
  */
 
 import { registerPlugin } from '@wordpress/plugins';
 import { addFilter } from '@wordpress/hooks';
 import { createHigherOrderComponent } from '@wordpress/compose';
-import { CustomSidebar } from './toolbar/components/layout/CustomSidebar';
+import { ToolbarToggle } from './toolbar/components/layout/ToolbarToggle';
+import { Toolbar } from './toolbar/Toolbar';
+import { ToolbarProvider } from './toolbar/ToolbarProvider';
 import './styles/main.scss';
+import './toolbar/toolbar.scss';
 
-// Register the custom toolbar plugin
+// Register the toolbar toggle button (DOM injection approach)
+registerPlugin('forjeon-toolbar-toggle', {
+	render: ToolbarToggle,
+	icon: 'editor-kitchensink',
+});
+
+// Register the main floating toolbar
 registerPlugin('forjeon-toolbar', {
-	render: CustomSidebar,
-	icon: 'admin-customizer',
+	render: () => (
+		<ToolbarProvider>
+			<Toolbar />
+		</ToolbarProvider>
+	),
+	icon: 'editor-kitchensink',
 });
 
 // Add a Higher Order Component to apply inline styles to blocks

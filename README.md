@@ -10,13 +10,15 @@ Forjeon aims to be the **ultimate Gutenberg enhancement suite** - providing all 
 
 ## 🚀 Features
 
-### ✅ Currently Available
+### ✅ Currently Available (Phase 1.1 Complete)
+- **🎨 Forjeon Toolbar** - Floating/draggable toolbar with tabbed interface accessible via header button
 - **Advanced Typography Controls** - Fine-tune letter spacing, line height, and text shadows with real-time preview
 - **Professional Tabs Block** - Multi-style tabs with responsive accordion behavior and smooth animations
-- **Enhanced Block Editor** - Integrated sidebar with advanced typography options
+- **Header Integration** - Native WordPress editor header button (🎨 Forjeon) for seamless access
+- **Clean Build System** - Zero-warning development environment with optimized Sass configuration
 
-### 🚧 In Development (Phase 1-6 Roadmap)
-- **Dedicated Toolbar Interface** - Floating/dockable toolbar with organized tabs for all controls
+### 🚧 In Development (Phase 1.2-6 Roadmap)
+- **Enhanced UI Components** - Design system with tokens, reusable components, and icon integration
 - **Advanced Design Controls** - Background, border, spacing, shadow, and visibility controls
 - **Layout Management** - Flexbox, Grid, positioning, and responsive controls  
 - **Animation System** - Entrance animations, hover effects, scroll triggers, and custom keyframes
@@ -79,6 +81,12 @@ composer require forjeon/forjeon
 
 ### Development Commands
 ```bash
+# Build for production (zero warnings!)
+npm run build
+
+# Development mode with watch
+npm run start
+
 # Run tests
 composer test
 
@@ -176,13 +184,15 @@ src/
 
 ## 🗺️ Development Roadmap
 
-### Phase 1: Foundation & Architecture (In Progress)
+### Phase 1: Foundation & Architecture ✅ **COMPLETED**
 - [x] Plugin restructure and organization
 - [x] Advanced typography controls
 - [x] Professional tabs block
-- [ ] Core toolbar infrastructure
-- [ ] Floating/dockable toolbar system
-- [ ] Tab navigation system
+- [x] Core toolbar infrastructure ✅
+- [x] Floating/dockable toolbar system ✅
+- [x] Tab navigation system ✅
+- [x] **BONUS**: Header button integration ✅
+- [x] **BONUS**: Clean build system ✅
 
 ### Phase 2: Core Styling Features
 - [ ] Design controls (background, border, spacing, shadow)
@@ -216,14 +226,17 @@ src/
 
 ### Quick Start
 1. **Install and activate** the Forjeon plugin
-2. **Create a new post/page** and add a Tabs block from the Forjeon category
-3. **Customize typography** using the enhanced controls in the sidebar
-4. **Explore styling options** - Multiple tab styles, responsive behavior, and professional animations
+2. **Create a new post/page** and look for the **🎨 Forjeon** button in the editor header
+3. **Click the Forjeon button** to open the floating toolbar
+4. **Explore typography controls** - Select any text block and use the Typography tab
+5. **Add professional blocks** - Insert a Tabs block from the Forjeon category
 
 ### Current Features Tour
-- **Enhanced Typography Panel** - Access advanced letter spacing, line height, and text shadow controls through the Forjeon sidebar
+- **🎨 Forjeon Toolbar** - Click the header button to access a floating, draggable toolbar with tabbed interface
+- **Advanced Typography Controls** - Real-time preview for letter spacing, line height, and text shadow adjustments
 - **Professional Tabs Block** - Choose from Default, Pills, or Underline styles with responsive accordion behavior
-- **Real-time Preview** - See changes instantly as you adjust typography and styling options
+- **Header Integration** - Seamless access via native WordPress editor header button (no sidebar clutter)
+- **Drag & Drop Interface** - Move the toolbar anywhere within the viewport for optimal workflow
 
 ## 🔌 Configuration
 
@@ -260,6 +273,33 @@ Licensed under **GPL v2 or later** - see the [LICENSE](LICENSE) file for details
 - **Plugin Structure** - See `/docs/PLUGIN_STRUCTURE.md` for architecture guide
 - **Issues & Bugs** - Report via GitHub Issues
 - **Feature Requests** - Share ideas via GitHub Discussions
+
+## 🏗️ Technical Implementation Details
+
+### Header Button Integration
+The Forjeon toolbar is accessed via a **🎨 Forjeon** button integrated directly into the WordPress editor header using DOM manipulation:
+
+- **Target**: `.editor-header__settings` class for precise placement
+- **Technology**: React 18 `createRoot` API for modern component mounting
+- **Positioning**: First button in the right-side settings area
+- **State Sync**: Custom events for toolbar visibility synchronization
+
+### Floating Toolbar System
+- **Draggable Interface**: Full viewport drag with boundary detection
+- **Responsive Design**: Adapts to different screen sizes and orientations  
+- **State Management**: React Context API for centralized state
+- **Tab System**: Modular tab architecture for organized controls
+
+### Clean Build Process
+- **Zero Warnings**: Optimized webpack configuration with Sass deprecation handling
+- **Modern Standards**: ES6+, React 18, WordPress coding standards
+- **Performance**: Code splitting and optimized bundle sizes
+- **Development**: Hot reload and clean development environment
+
+### Keyboard Shortcuts
+- **Alt + F**: Toggle Forjeon toolbar visibility
+- **Escape**: Close toolbar when open
+- **Click & Drag**: Move toolbar anywhere within viewport
 
 ## 🙏 Acknowledgments
 
