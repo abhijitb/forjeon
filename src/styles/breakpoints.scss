@@ -1,0 +1,229 @@
+/**
+ * Forjeon Responsive Breakpoints
+ * Mobile-first responsive design system
+ */
+
+// Breakpoint values
+:root {
+	--forjeon-breakpoint-xs: 320px;   /* Small phones */
+	--forjeon-breakpoint-sm: 640px;   /* Large phones */
+	--forjeon-breakpoint-md: 768px;   /* Tablets */
+	--forjeon-breakpoint-lg: 1024px;  /* Small laptops */
+	--forjeon-breakpoint-xl: 1280px;  /* Desktops */
+	--forjeon-breakpoint-2xl: 1536px; /* Large desktops */
+}
+
+// Breakpoint mixins for easy usage
+@mixin forjeon-breakpoint-xs {
+	@media (min-width: 320px) {
+		@content;
+	}
+}
+
+@mixin forjeon-breakpoint-sm {
+	@media (min-width: 640px) {
+		@content;
+	}
+}
+
+@mixin forjeon-breakpoint-md {
+	@media (min-width: 768px) {
+		@content;
+	}
+}
+
+@mixin forjeon-breakpoint-lg {
+	@media (min-width: 1024px) {
+		@content;
+	}
+}
+
+@mixin forjeon-breakpoint-xl {
+	@media (min-width: 1280px) {
+		@content;
+	}
+}
+
+@mixin forjeon-breakpoint-2xl {
+	@media (min-width: 1536px) {
+		@content;
+	}
+}
+
+// Max-width breakpoints (mobile-first)
+@mixin forjeon-breakpoint-max-xs {
+	@media (max-width: 319px) {
+		@content;
+	}
+}
+
+@mixin forjeon-breakpoint-max-sm {
+	@media (max-width: 639px) {
+		@content;
+	}
+}
+
+@mixin forjeon-breakpoint-max-md {
+	@media (max-width: 767px) {
+		@content;
+	}
+}
+
+@mixin forjeon-breakpoint-max-lg {
+	@media (max-width: 1023px) {
+		@content;
+	}
+}
+
+@mixin forjeon-breakpoint-max-xl {
+	@media (max-width: 1279px) {
+		@content;
+	}
+}
+
+// Range breakpoints
+@mixin forjeon-breakpoint-between($min, $max) {
+	@media (min-width: #{$min}) and (max-width: #{$max}) {
+		@content;
+	}
+}
+
+// Responsive utilities
+.forjeon-responsive {
+	// Hide/show utilities
+	&__hide-xs {
+		@include forjeon-breakpoint-max-xs {
+			display: none !important;
+		}
+	}
+
+	&__hide-sm {
+		@include forjeon-breakpoint-max-sm {
+			display: none !important;
+		}
+	}
+
+	&__hide-md {
+		@include forjeon-breakpoint-max-md {
+			display: none !important;
+		}
+	}
+
+	&__hide-lg {
+		@include forjeon-breakpoint-max-lg {
+			display: none !important;
+		}
+	}
+
+	&__show-xs {
+		display: none !important;
+		@include forjeon-breakpoint-xs {
+			display: block !important;
+		}
+	}
+
+	&__show-sm {
+		display: none !important;
+		@include forjeon-breakpoint-sm {
+			display: block !important;
+		}
+	}
+
+	&__show-md {
+		display: none !important;
+		@include forjeon-breakpoint-md {
+			display: block !important;
+		}
+	}
+
+	&__show-lg {
+		display: none !important;
+		@include forjeon-breakpoint-lg {
+			display: block !important;
+		}
+	}
+}
+
+// Toolbar-specific responsive behavior
+.forjeon-toolbar {
+	// Mobile adjustments
+	@include forjeon-breakpoint-max-md {
+		width: calc(100vw - var(--forjeon-space-4));
+		max-width: 100%;
+		left: var(--forjeon-space-2) !important;
+		right: var(--forjeon-space-2);
+	}
+
+	// Small mobile adjustments
+	@include forjeon-breakpoint-max-sm {
+		width: calc(100vw - var(--forjeon-space-2));
+		left: var(--forjeon-space-1) !important;
+		right: var(--forjeon-space-1);
+		font-size: var(--forjeon-text-xs);
+	}
+}
+
+// Tab system responsive behavior
+.forjeon-tab-list {
+	@include forjeon-breakpoint-max-md {
+		overflow-x: auto;
+		scrollbar-width: none;
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+}
+
+.forjeon-tab-button {
+	@include forjeon-breakpoint-max-sm {
+		min-width: 60px;
+		padding: var(--forjeon-space-2) var(--forjeon-space-1);
+
+		.forjeon-tab-icon {
+			font-size: var(--forjeon-text-sm);
+		}
+
+		.forjeon-tab-label {
+			font-size: var(--forjeon-text-xs);
+		}
+	}
+}
+
+// Form elements responsive behavior
+.forjeon-input-wrapper,
+.forjeon-select-wrapper {
+	@include forjeon-breakpoint-max-sm {
+		&--small {
+			height: 2.25rem; /* Larger touch targets on mobile */
+		}
+
+		&--medium {
+			height: 2.5rem;
+		}
+
+		&--large {
+			height: 3rem;
+		}
+	}
+}
+
+// Button responsive behavior
+.forjeon-button {
+	@include forjeon-breakpoint-max-sm {
+		&--small {
+			height: 2.25rem; /* Larger touch targets on mobile */
+			padding: var(--forjeon-space-2) var(--forjeon-space-3);
+		}
+
+		&--medium {
+			height: 2.5rem;
+			padding: var(--forjeon-space-3) var(--forjeon-space-4);
+		}
+
+		&--large {
+			height: 3rem;
+			padding: var(--forjeon-space-4) var(--forjeon-space-6);
+		}
+	}
+}

@@ -1,0 +1,248 @@
+/**
+ * Forjeon Button Styles
+ * Using design tokens for consistency
+ */
+
+.forjeon-button {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--forjeon-space-2);
+	height: var(--forjeon-button-height);
+	padding: var(--forjeon-button-padding-y) var(--forjeon-button-padding-x);
+	border: 1px solid transparent;
+	border-radius: var(--forjeon-button-radius);
+	font-size: var(--forjeon-text-sm);
+	font-weight: var(--forjeon-font-medium);
+	line-height: var(--forjeon-leading-none);
+	text-decoration: none;
+	cursor: pointer;
+	transition: all var(--forjeon-transition-fast);
+	user-select: none;
+
+	// Remove default button styles
+	background: none;
+	font-family: inherit;
+
+	// Focus states
+	&:focus {
+		outline: none;
+		box-shadow: 0 0 0 2px var(--forjeon-primary-500);
+	}
+
+	&:focus:not(:focus-visible) {
+		box-shadow: none;
+	}
+
+	&:focus-visible {
+		box-shadow: 0 0 0 2px var(--forjeon-primary-500);
+	}
+
+	// Disabled state
+	&--disabled,
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+		pointer-events: none;
+	}
+
+	// Loading state
+	&--loading {
+		cursor: wait;
+	}
+
+	// Button variants
+	&--primary {
+		background-color: var(--forjeon-wp-blue);
+		border-color: var(--forjeon-wp-blue);
+		color: var(--forjeon-neutral-0);
+
+		&:hover:not(:disabled) {
+			background-color: var(--forjeon-wp-blue-dark);
+			border-color: var(--forjeon-wp-blue-dark);
+		}
+
+		&:active:not(:disabled) {
+			background-color: var(--forjeon-wp-blue-dark);
+			transform: translateY(1px);
+		}
+	}
+
+	&--secondary {
+		background-color: var(--forjeon-neutral-0);
+		border-color: var(--forjeon-neutral-300);
+		color: var(--forjeon-neutral-700);
+
+		&:hover:not(:disabled) {
+			background-color: var(--forjeon-neutral-50);
+			border-color: var(--forjeon-neutral-400);
+		}
+
+		&:active:not(:disabled) {
+			background-color: var(--forjeon-neutral-100);
+			transform: translateY(1px);
+		}
+	}
+
+	&--tertiary {
+		background-color: transparent;
+		border-color: transparent;
+		color: var(--forjeon-neutral-600);
+
+		&:hover:not(:disabled) {
+			background-color: var(--forjeon-neutral-100);
+			color: var(--forjeon-neutral-800);
+		}
+
+		&:active:not(:disabled) {
+			background-color: var(--forjeon-neutral-200);
+			transform: translateY(1px);
+		}
+	}
+
+	&--success {
+		background-color: var(--forjeon-success-500);
+		border-color: var(--forjeon-success-500);
+		color: var(--forjeon-neutral-0);
+
+		&:hover:not(:disabled) {
+			background-color: var(--forjeon-success-600);
+			border-color: var(--forjeon-success-600);
+		}
+
+		&:active:not(:disabled) {
+			background-color: var(--forjeon-success-700);
+			transform: translateY(1px);
+		}
+	}
+
+	&--warning {
+		background-color: var(--forjeon-warning-500);
+		border-color: var(--forjeon-warning-500);
+		color: var(--forjeon-neutral-0);
+
+		&:hover:not(:disabled) {
+			background-color: var(--forjeon-warning-600);
+			border-color: var(--forjeon-warning-600);
+		}
+
+		&:active:not(:disabled) {
+			background-color: var(--forjeon-warning-700);
+			transform: translateY(1px);
+		}
+	}
+
+	&--error {
+		background-color: var(--forjeon-error-500);
+		border-color: var(--forjeon-error-500);
+		color: var(--forjeon-neutral-0);
+
+		&:hover:not(:disabled) {
+			background-color: var(--forjeon-error-600);
+			border-color: var(--forjeon-error-600);
+		}
+
+		&:active:not(:disabled) {
+			background-color: var(--forjeon-error-700);
+			transform: translateY(1px);
+		}
+	}
+
+	// Button sizes
+	&--small {
+		height: 2rem; /* 32px */
+		padding: var(--forjeon-space-1) var(--forjeon-space-3);
+		font-size: var(--forjeon-text-xs);
+	}
+
+	&--medium {
+		// Default size already set above
+	}
+
+	&--large {
+		height: 2.75rem; /* 44px */
+		padding: var(--forjeon-space-3) var(--forjeon-space-6);
+		font-size: var(--forjeon-text-base);
+	}
+
+	// Icon-only buttons
+	&--icon-only {
+		width: var(--forjeon-button-height);
+		padding: 0;
+
+		.forjeon-button__text {
+			display: none;
+		}
+
+		&.forjeon-button--small {
+			width: 2rem;
+		}
+
+		&.forjeon-button--large {
+			width: 2.75rem;
+		}
+	}
+
+	// Button elements
+	&__spinner {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	&__icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+
+		&--left {
+			margin-right: var(--forjeon-space-1);
+		}
+
+		&--right {
+			margin-left: var(--forjeon-space-1);
+		}
+
+		svg {
+			width: 1em;
+			height: 1em;
+		}
+	}
+
+	&__text {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}
+
+// High contrast mode adjustments
+@media (prefers-contrast: high) {
+	.forjeon-button {
+		&--primary,
+		&--success,
+		&--warning,
+		&--error {
+			border-width: 2px;
+		}
+
+		&--secondary,
+		&--tertiary {
+			border-width: 2px;
+			border-color: currentColor;
+		}
+	}
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+	.forjeon-button {
+		transition: none;
+
+		&:active:not(:disabled) {
+			transform: none;
+		}
+	}
+}

@@ -1,0 +1,174 @@
+/**
+ * Forjeon Select Styles
+ * Using design tokens for consistency
+ */
+
+.forjeon-select-wrapper {
+	position: relative;
+	display: flex;
+	align-items: center;
+	background-color: var(--forjeon-neutral-0);
+	border: 1px solid var(--forjeon-input-border);
+	border-radius: var(--forjeon-input-radius);
+	transition: all var(--forjeon-transition-fast);
+
+	// Focus state
+	&:focus-within {
+		border-color: var(--forjeon-wp-blue);
+		box-shadow: 0 0 0 1px var(--forjeon-wp-blue);
+	}
+
+	// Error state
+	&--error {
+		border-color: var(--forjeon-error-500);
+
+		&:focus-within {
+			border-color: var(--forjeon-error-500);
+			box-shadow: 0 0 0 1px var(--forjeon-error-500);
+		}
+	}
+
+	// Disabled state
+	&--disabled {
+		background-color: var(--forjeon-neutral-50);
+		border-color: var(--forjeon-neutral-200);
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+
+	// Size variants
+	&--small {
+		height: 2rem; /* 32px */
+	}
+
+	&--medium {
+		height: var(--forjeon-input-height); /* 36px */
+	}
+
+	&--large {
+		height: 2.75rem; /* 44px */
+	}
+}
+
+.forjeon-select {
+	flex: 1;
+	width: 100%;
+	height: 100%;
+	padding: var(--forjeon-input-padding-y) var(--forjeon-space-8) var(--forjeon-input-padding-y) var(--forjeon-input-padding-x);
+	border: none;
+	background: transparent;
+	font-size: var(--forjeon-text-sm);
+	font-weight: var(--forjeon-font-normal);
+	line-height: var(--forjeon-leading-normal);
+	color: var(--forjeon-neutral-900);
+	cursor: pointer;
+	transition: all var(--forjeon-transition-fast);
+
+	// Remove default styles
+	outline: none;
+	appearance: none;
+
+	// Disabled state
+	&:disabled {
+		cursor: not-allowed;
+		color: var(--forjeon-neutral-500);
+	}
+
+	// Size variants
+	&--small {
+		padding: var(--forjeon-space-1) var(--forjeon-space-6) var(--forjeon-space-1) var(--forjeon-space-2);
+		font-size: var(--forjeon-text-xs);
+	}
+
+	&--medium {
+		// Default size already set above
+	}
+
+	&--large {
+		padding: var(--forjeon-space-3) var(--forjeon-space-10) var(--forjeon-space-3) var(--forjeon-space-4);
+		font-size: var(--forjeon-text-base);
+	}
+
+	// Option styling
+	option {
+		background-color: var(--forjeon-neutral-0);
+		color: var(--forjeon-neutral-900);
+		padding: var(--forjeon-space-2);
+
+		&:disabled {
+			color: var(--forjeon-neutral-400);
+		}
+
+		&:hover,
+		&:focus {
+			background-color: var(--forjeon-neutral-50);
+		}
+	}
+}
+
+.forjeon-select__icon {
+	position: absolute;
+	right: var(--forjeon-space-3);
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--forjeon-neutral-500);
+	pointer-events: none;
+	transition: all var(--forjeon-transition-fast);
+
+	// Size variants
+	.forjeon-select-wrapper--small & {
+		right: var(--forjeon-space-2);
+
+		svg {
+			width: 10px;
+			height: 10px;
+		}
+	}
+
+	.forjeon-select-wrapper--large & {
+		right: var(--forjeon-space-4);
+
+		svg {
+			width: 14px;
+			height: 14px;
+		}
+	}
+
+	// Disabled state
+	.forjeon-select-wrapper--disabled & {
+		color: var(--forjeon-neutral-300);
+	}
+}
+
+// High contrast mode adjustments
+@media (prefers-contrast: high) {
+	.forjeon-select-wrapper {
+		border-width: 2px;
+
+		&:focus-within {
+			box-shadow: 0 0 0 2px var(--forjeon-wp-blue);
+		}
+
+		&--error:focus-within {
+			box-shadow: 0 0 0 2px var(--forjeon-error-500);
+		}
+	}
+
+	.forjeon-select__icon {
+		svg {
+			stroke-width: 2;
+		}
+	}
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+	.forjeon-select-wrapper,
+	.forjeon-select,
+	.forjeon-select__icon {
+		transition: none;
+	}
+}

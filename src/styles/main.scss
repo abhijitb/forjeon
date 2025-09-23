@@ -1,7 +1,13 @@
 /**
- * Forjeon - Advanced Typography Controls
- * Main stylesheet for typography control components
+ * Forjeon - Advanced Block Editor Enhancement Suite
+ * Main stylesheet with design system foundation
  */
+
+// Import design tokens first
+@import "tokens";
+
+// Import responsive breakpoints
+@import "breakpoints";
 
 // Import WordPress design system variables
 @import "@wordpress/base-styles/colors";
@@ -10,20 +16,6 @@
 
 // Import block styles
 @import "../blocks/content/tabs/frontend";
-
-// Forjeon specific variables
-:root {
-	--forjeon-primary: #0073aa;
-	--forjeon-secondary: #646970;
-	--forjeon-success: #00a32a;
-	--forjeon-warning: #dba617;
-	--forjeon-error: #d63638;
-	--forjeon-background: #f6f7f7;
-	--forjeon-border: #c3c4c7;
-	--forjeon-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-	--forjeon-radius: 4px;
-	--forjeon-spacing: 8px;
-}
 
 // Typography Panel Styles
 .forjeon-typography-panel {

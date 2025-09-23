@@ -1,0 +1,166 @@
+/**
+ * Forjeon Input Styles
+ * Using design tokens for consistency
+ */
+
+.forjeon-input-wrapper {
+	position: relative;
+	display: flex;
+	align-items: center;
+	background-color: var(--forjeon-neutral-0);
+	border: 1px solid var(--forjeon-input-border);
+	border-radius: var(--forjeon-input-radius);
+	transition: all var(--forjeon-transition-fast);
+
+	// Focus state
+	&:focus-within {
+		border-color: var(--forjeon-wp-blue);
+		box-shadow: 0 0 0 1px var(--forjeon-wp-blue);
+	}
+
+	// Error state
+	&--error {
+		border-color: var(--forjeon-error-500);
+
+		&:focus-within {
+			border-color: var(--forjeon-error-500);
+			box-shadow: 0 0 0 1px var(--forjeon-error-500);
+		}
+	}
+
+	// Disabled state
+	&--disabled {
+		background-color: var(--forjeon-neutral-50);
+		border-color: var(--forjeon-neutral-200);
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+
+	// Size variants
+	&--small {
+		height: 2rem; /* 32px */
+	}
+
+	&--medium {
+		height: var(--forjeon-input-height); /* 36px */
+	}
+
+	&--large {
+		height: 2.75rem; /* 44px */
+	}
+}
+
+.forjeon-input {
+	flex: 1;
+	width: 100%;
+	height: 100%;
+	padding: var(--forjeon-input-padding-y) var(--forjeon-input-padding-x);
+	border: none;
+	background: transparent;
+	font-size: var(--forjeon-text-sm);
+	font-weight: var(--forjeon-font-normal);
+	line-height: var(--forjeon-leading-normal);
+	color: var(--forjeon-neutral-900);
+	transition: all var(--forjeon-transition-fast);
+
+	// Remove default styles
+	outline: none;
+	appearance: none;
+
+	// Placeholder styling
+	&::placeholder {
+		color: var(--forjeon-neutral-400);
+	}
+
+	// Disabled state
+	&:disabled {
+		cursor: not-allowed;
+		color: var(--forjeon-neutral-500);
+
+		&::placeholder {
+			color: var(--forjeon-neutral-300);
+		}
+	}
+
+	// Size variants
+	&--small {
+		padding: var(--forjeon-space-1) var(--forjeon-space-2);
+		font-size: var(--forjeon-text-xs);
+	}
+
+	&--medium {
+		// Default size already set above
+	}
+
+	&--large {
+		padding: var(--forjeon-space-3) var(--forjeon-space-4);
+		font-size: var(--forjeon-text-base);
+	}
+
+	// Specific input types
+	&[type="number"] {
+		// Remove number input spinners in WebKit browsers
+		&::-webkit-outer-spin-button,
+		&::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		// Remove number input spinners in Firefox
+		-moz-appearance: textfield;
+	}
+
+	&[type="search"] {
+		// Remove search input styling in WebKit browsers
+		&::-webkit-search-decoration,
+		&::-webkit-search-cancel-button,
+		&::-webkit-search-results-button,
+		&::-webkit-search-results-decoration {
+			-webkit-appearance: none;
+		}
+	}
+}
+
+.forjeon-input__prefix,
+.forjeon-input__suffix {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	color: var(--forjeon-neutral-500);
+	font-size: var(--forjeon-text-sm);
+	font-weight: var(--forjeon-font-medium);
+}
+
+.forjeon-input__prefix {
+	padding-left: var(--forjeon-space-3);
+	padding-right: var(--forjeon-space-1);
+}
+
+.forjeon-input__suffix {
+	padding-left: var(--forjeon-space-1);
+	padding-right: var(--forjeon-space-3);
+}
+
+// High contrast mode adjustments
+@media (prefers-contrast: high) {
+	.forjeon-input-wrapper {
+		border-width: 2px;
+
+		&:focus-within {
+			box-shadow: 0 0 0 2px var(--forjeon-wp-blue);
+		}
+
+		&--error:focus-within {
+			box-shadow: 0 0 0 2px var(--forjeon-error-500);
+		}
+	}
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+	.forjeon-input-wrapper,
+	.forjeon-input {
+		transition: none;
+	}
+}

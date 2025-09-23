@@ -5,6 +5,13 @@
  * @since 1.0.0
  */
 
+// Import UI component styles
+@import "components/ui/Button";
+@import "components/ui/Input";
+@import "components/ui/Select";
+@import "components/ui/Icon";
+@import "components/ui/Loading";
+
 /* Toolbar Toggle Button */
 .forjeon-toolbar-toggle {
 	position: fixed;
