@@ -373,6 +373,9 @@ class Settings {
 					<?php
 					settings_fields('forjeon_settings_group');
 					
+					// Add hidden field to ensure form submission always has data
+					printf('<input type="hidden" name="%s[_form_submitted]" value="1" />', esc_attr(self::OPTION_NAME));
+					
 					// Render different sections based on active tab
 					switch ($current_tab) {
 						case 'general':
@@ -813,10 +816,20 @@ class Settings {
 	/**
 	 * Sanitize settings
 	 */
-	public function sanitize_settings(array $input): array {
+	public function sanitize_settings($input): array {
+		// Handle null or non-array input
+		if (!is_array($input)) {
+			$input = [];
+		}
+		
+		// If no form submission, return current settings
+		if (empty($input['_form_submitted'])) {
+			return $this->get_settings();
+		}
+		
 		$sanitized = [];
 		
-		// Boolean fields
+		// Boolean fields - defaults to false if not present
 		$boolean_fields = [
 			'toolbar_enabled', 
 			'header_button_enabled', 
@@ -836,14 +849,10 @@ class Settings {
 		$sanitized['toolbar_position'] = in_array($input['toolbar_position'] ?? '', ['floating', 'docked']) ? $input['toolbar_position'] : 'floating';
 		$sanitized['toolbar_default_tab'] = in_array($input['toolbar_default_tab'] ?? '', ['typography', 'design', 'layout', 'effects', 'blocks', 'advanced']) ? $input['toolbar_default_tab'] : 'typography';
 		
-		// Feature flags
-		$sanitized['feature_flags'] = $this->default_settings['feature_flags'];
-		if (isset($input['feature_flags']) && is_array($input['feature_flags'])) {
-			foreach ($input['feature_flags'] as $flag => $value) {
-				if (array_key_exists($flag, $this->default_settings['feature_flags'])) {
-					$sanitized['feature_flags'][$flag] = !empty($value);
-				}
-			}
+		// Feature flags - defaults to false if not present
+		$sanitized['feature_flags'] = [];
+		foreach ($this->default_settings['feature_flags'] as $flag => $default_value) {
+			$sanitized['feature_flags'][$flag] = !empty($input['feature_flags'][$flag]);
 		}
 		
 		// User roles access (for future implementation)
