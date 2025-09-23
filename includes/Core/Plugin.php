@@ -49,6 +49,13 @@ class Plugin {
 	private $tabs_block;
 
 	/**
+	 * Settings instance
+	 *
+	 * @var Settings
+	 */
+	private $settings;
+
+	/**
 	 * Get plugin instance
 	 *
 	 * @return Plugin
@@ -72,6 +79,9 @@ class Plugin {
 	 * Initialize plugin components
 	 */
 	private function init_components() {
+		// Initialize settings first
+		$this->settings = new Settings();
+
 		// Initialize block extensions
 		$this->block_extensions = new \Forjeon\Legacy\Block_Extensions();
 
@@ -93,6 +103,7 @@ class Plugin {
 		$this->setup_hooks();
 
 		// Initialize components
+		$this->settings->init();
 		$this->block_extensions->init();
 		$this->typography_controls->init();
 		$this->css_generator->init();
@@ -130,6 +141,11 @@ class Plugin {
 	 * Enqueue block editor assets
 	 */
 	public function enqueue_block_editor_assets() {
+		// Check if current user should have access to the toolbar
+		if ( ! $this->settings->should_load_toolbar() ) {
+			return;
+		}
+		
 		// Get asset dependencies and version
 		$asset_file = include( FORJEON_PLUGIN_DIR . 'build/index.asset.php' );
 
@@ -142,6 +158,10 @@ class Plugin {
 			true
 		);
 
+		// Get current user preferences
+		$user_preferences = $this->settings->get_user_preferences_for_user(get_current_user_id());
+		$plugin_settings = $this->settings->get_settings();
+
 		// Localize script with data
 		wp_localize_script(
 			'forjeon-block-editor',
@@ -150,10 +170,23 @@ class Plugin {
 				'version' => FORJEON_VERSION,
 				'pluginUrl' => FORJEON_PLUGIN_URL,
 				'nonce' => wp_create_nonce( 'forjeon_nonce' ),
+				'userPreferencesNonce' => wp_create_nonce( 'forjeon_user_preferences' ),
+				'settings' => $plugin_settings,
+				'userPreferences' => $user_preferences,
+				'isAdmin' => current_user_can( 'manage_options' ),
+				'currentUserId' => get_current_user_id(),
 				'typography' => array(
 					'defaults' => $this->get_typography_defaults(),
 					'presets' => $this->get_text_shadow_presets(),
 				),
+				'integration' => array(
+					'toolbar_enabled' => $this->settings->get_setting( 'toolbar_enabled', true ),
+					'header_button_enabled' => $this->settings->get_setting( 'header_button_enabled', true ),
+					'keyboard_shortcuts' => $this->settings->get_setting( 'keyboard_shortcuts', true ),
+					'auto_save_preferences' => $this->settings->get_setting( 'auto_save_preferences', true ),
+					'debug_mode' => $this->settings->get_setting( 'debug_mode', false ),
+				),
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			)
 		);
 
@@ -400,5 +433,14 @@ class Plugin {
 	 */
 	public function get_tabs_block() {
 		return $this->tabs_block;
+	}
+
+	/**
+	 * Get settings instance
+	 *
+	 * @return Settings
+	 */
+	public function get_settings() {
+		return $this->settings;
 	}
 }

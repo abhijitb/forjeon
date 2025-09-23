@@ -14,6 +14,7 @@ import { useSelect } from '@wordpress/data';
 import { ToolbarProvider } from './ToolbarProvider';
 import { TabPanel } from './components/ui/TabPanel';
 import { FloatingPanel } from './components/layout/FloatingPanel';
+import { toolbarPreferences, settings as pluginSettings } from './utils/preferences';
 
 // Import tab components
 import { DesignTab } from './tabs/DesignTab';
@@ -28,11 +29,18 @@ import { AdvancedTab } from './tabs/AdvancedTab';
  * Provides floating/dockable interface for all Forjeon controls
  */
 export function Toolbar() {
-	const [isVisible, setIsVisible] = useState(false);
-	const [activeTab, setActiveTab] = useState('typography'); // Start with typography since it's working
-	const [isMinimized, setIsMinimized] = useState(false);
+	// Initialize state from saved preferences
+	const [isVisible, setIsVisible] = useState(() => toolbarPreferences.getVisible());
+	const [activeTab, setActiveTab] = useState(() => toolbarPreferences.getActiveTab());
+	const [isMinimized, setIsMinimized] = useState(() => toolbarPreferences.getMinimized());
+	const [isDocked, setIsDocked] = useState(() => {
+		// Check if default position should be docked
+		const defaultPosition = pluginSettings.getDefaultPosition();
+		const savedDocked = toolbarPreferences.getDocked();
+		return defaultPosition === 'docked' ? true : savedDocked;
+	});
 	const [isDragging, setIsDragging] = useState(false);
-	const [position, setPosition] = useState({ x: 100, y: 100 });
+	const [position, setPosition] = useState(() => toolbarPreferences.getPosition());
 	const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 	const toolbarRef = useRef(null);
 
@@ -86,6 +94,7 @@ export function Toolbar() {
 	const toggleToolbar = () => {
 		const newState = !isVisible;
 		setIsVisible(newState);
+		toolbarPreferences.setVisible(newState);
 		// Notify header button of state change
 		window.dispatchEvent(new CustomEvent('forjeon-toolbar-state', {
 			detail: { isVisible: newState }
@@ -95,6 +104,11 @@ export function Toolbar() {
 	// Handle keyboard shortcuts and custom events
 	useEffect(() => {
 		const handleKeyDown = (event) => {
+			// Only handle keyboard shortcuts if they're enabled
+			if (!pluginSettings.areKeyboardShortcutsEnabled()) {
+				return;
+			}
+			
 			// Alt + F to toggle toolbar
 			if (event.altKey && (event.key === 'f' || event.key === 'ƒ' || event.code === 'KeyF')) {
 				event.preventDefault();
@@ -103,6 +117,7 @@ export function Toolbar() {
 			// Escape to close toolbar
 			if (event.key === 'Escape' && isVisible) {
 				setIsVisible(false);
+				toolbarPreferences.setVisible(false);
 			}
 		};
 
@@ -121,7 +136,7 @@ export function Toolbar() {
 
 	// Handle drag functionality
 	const handleDragStart = (event) => {
-		if (!toolbarRef.current) return;
+		if (!toolbarRef.current || isDocked) return; // Don't allow dragging when docked
 		
 		const rect = toolbarRef.current.getBoundingClientRect();
 		const offsetX = event.clientX - rect.left;
@@ -156,6 +171,8 @@ export function Toolbar() {
 
 	const handleDragEnd = () => {
 		setIsDragging(false);
+		// Save the new position when dragging ends
+		toolbarPreferences.setPosition(position);
 	};
 
 	// Mouse event listeners for dragging
@@ -193,6 +210,11 @@ export function Toolbar() {
 
 	const CurrentTabComponent = getCurrentTabComponent();
 
+	// Don't render if toolbar is disabled
+	if (!pluginSettings.isToolbarEnabled()) {
+		return null;
+	}
+
 	// Get the document body for portal mounting
 	const portalTarget = document.body;
 	
@@ -204,8 +226,14 @@ export function Toolbar() {
 					ref={toolbarRef}
 					style={{
 						position: 'fixed',
-						left: `${position.x}px`,
-						top: `${position.y}px`,
+						...(isDocked ? {
+							right: '20px',
+							top: '50%',
+							transform: 'translateY(-50%)',
+						} : {
+							left: `${position.x}px`,
+							top: `${position.y}px`,
+						}),
 						width: '380px',
 						maxHeight: '80vh',
 						background: '#fff',
@@ -214,9 +242,9 @@ export function Toolbar() {
 						boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
 						zIndex: 100000,
 						overflow: 'hidden',
-						cursor: isDragging ? 'grabbing' : 'default'
+						cursor: isDragging ? 'grabbing' : (isDocked ? 'default' : 'default')
 					}}
-					className="forjeon-toolbar"
+					className={`forjeon-toolbar ${isDocked ? 'is-docked' : ''}`}
 				>
 					{/* Drag Handle */}
 					<div
@@ -225,16 +253,36 @@ export function Toolbar() {
 							height: '24px',
 							background: 'linear-gradient(135deg, #f7f8f9 0%, #e8eaed 100%)',
 							borderBottom: '1px solid #ddd',
-							cursor: 'grab',
+							cursor: isDocked ? 'default' : 'grab',
 							display: 'flex',
 							alignItems: 'center',
-							justifyContent: 'center',
+							justifyContent: 'space-between',
 							fontSize: '12px',
-							color: '#8c8f94'
+							color: '#8c8f94',
+							padding: '0 8px'
 						}}
-						title={__('Drag to move toolbar', 'forjeon')}
+						title={isDocked ? __('Toolbar is docked', 'forjeon') : __('Drag to move toolbar', 'forjeon')}
 					>
-						⋮⋮⋮
+						<span>{isDocked ? '📌' : '⋮⋮⋮'}</span>
+						{isDocked && (
+							<button
+								onClick={() => {
+									setIsDocked(false);
+									toolbarPreferences.setDocked(false);
+								}}
+								style={{
+									background: 'none',
+									border: 'none',
+									cursor: 'pointer',
+									fontSize: '12px',
+									color: '#0073aa',
+									padding: '2px 4px'
+								}}
+								title={__('Undock toolbar', 'forjeon')}
+							>
+								{__('Undock', 'forjeon')}
+							</button>
+						)}
 					</div>
 
 					{/* Toolbar Header */}
@@ -251,18 +299,42 @@ export function Toolbar() {
 								🎨 {__('Forjeon Toolbar', 'forjeon')}
 							</h3>
 						</div>
-						<button 
-							onClick={() => setIsVisible(false)}
-							style={{
-								background: 'none',
-								border: 'none',
-								cursor: 'pointer',
-								padding: '4px',
-								color: '#646970'
-							}}
-						>
-							✕
-						</button>
+						<div style={{ display: 'flex', gap: '4px' }}>
+							{!isDocked && (
+								<button 
+									onClick={() => {
+										setIsDocked(true);
+										toolbarPreferences.setDocked(true);
+									}}
+									style={{
+										background: 'none',
+										border: 'none',
+										cursor: 'pointer',
+										padding: '4px',
+										color: '#646970',
+										fontSize: '12px'
+									}}
+									title={__('Dock to right', 'forjeon')}
+								>
+									📌
+								</button>
+							)}
+							<button 
+								onClick={() => {
+									setIsVisible(false);
+									toolbarPreferences.setVisible(false);
+								}}
+								style={{
+									background: 'none',
+									border: 'none',
+									cursor: 'pointer',
+									padding: '4px',
+									color: '#646970'
+								}}
+							>
+								✕
+							</button>
+						</div>
 					</div>
 
 					{/* Tab Navigation */}
@@ -274,7 +346,12 @@ export function Toolbar() {
 						{tabs.map((tab) => (
 							<button
 								key={tab.name}
-								onClick={() => !tab.disabled && setActiveTab(tab.name)}
+								onClick={() => {
+								if (!tab.disabled) {
+									setActiveTab(tab.name);
+									toolbarPreferences.setActiveTab(tab.name);
+								}
+							}}
 								disabled={tab.disabled}
 								style={{
 									flex: 1,
