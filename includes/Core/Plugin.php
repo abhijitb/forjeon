@@ -391,7 +391,7 @@ class Plugin {
 	public function plugin_action_links( $links ) {
 		$settings_link = sprintf(
 			'<a href="%s">%s</a>',
-			admin_url( 'options-general.php?page=forjeon' ),
+			admin_url( 'admin.php?page=forjeon-settings' ),
 			esc_html__( 'Settings', 'forjeon' )
 		);
 

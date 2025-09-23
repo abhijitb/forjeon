@@ -78,12 +78,34 @@ class Settings {
 	 * Add admin menu page
 	 */
 	public function add_admin_menu(): void {
-		add_options_page(
+		add_menu_page(
+			__('Forjeon Settings', 'forjeon'),           // Page title
+			__('Forjeon', 'forjeon'),                    // Menu title
+			'manage_options',                             // Capability
+			'forjeon-settings',                          // Menu slug
+			[$this, 'render_settings_page'],             // Callback function
+			'data:image/svg+xml;base64,' . base64_encode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L13.09 8.26L19 7L17.74 10.74L23 12L17.74 13.26L19 17L13.09 15.74L12 22L10.91 15.74L5 17L6.26 13.26L1 12L6.26 10.74L5 7L10.91 8.26L12 2Z"/></svg>'), // Icon
+			30                                           // Position (after Comments)
+		);
+		
+		// Add submenu items for future expansion
+		add_submenu_page(
+			'forjeon-settings',
 			__('Forjeon Settings', 'forjeon'),
-			__('Forjeon', 'forjeon'),
+			__('Settings', 'forjeon'),
 			'manage_options',
 			'forjeon-settings',
 			[$this, 'render_settings_page']
+		);
+		
+		// Add getting started submenu for future use
+		add_submenu_page(
+			'forjeon-settings',
+			__('Getting Started', 'forjeon'),
+			__('Getting Started', 'forjeon'),
+			'manage_options',
+			'forjeon-getting-started',
+			[$this, 'render_getting_started_page']
 		);
 	}
 	
@@ -260,6 +282,31 @@ class Settings {
 			'forjeon_advanced_section',
 			['field' => 'enable_toolbar_animations', 'description' => __('Enable animations and transitions in the toolbar interface.', 'forjeon')]
 		);
+		
+		// Feature flags
+		$features = [
+			'typography_tab' => __('Typography Tab', 'forjeon'),
+			'design_tab' => __('Design Tab (Coming Soon)', 'forjeon'),
+			'layout_tab' => __('Layout Tab (Coming Soon)', 'forjeon'),
+			'effects_tab' => __('Effects Tab (Coming Soon)', 'forjeon'),
+			'blocks_tab' => __('Blocks Tab (Coming Soon)', 'forjeon'),
+			'advanced_tab' => __('Advanced Tab (Coming Soon)', 'forjeon'),
+		];
+		
+		foreach ($features as $feature_key => $feature_label) {
+			add_settings_field(
+				"feature_flags_{$feature_key}",
+				$feature_label,
+				[$this, 'render_feature_flag_field'],
+				'forjeon-settings',
+				'forjeon_features_section',
+				[
+					'field' => $feature_key,
+					'description' => $this->get_feature_description($feature_key),
+					'disabled' => $feature_key !== 'typography_tab'
+				]
+			);
+		}
 	}
 	
 	/**
@@ -270,62 +317,393 @@ class Settings {
 			return;
 		}
 		
+		$current_tab = $_GET['tab'] ?? 'general';
+		$tabs = [
+			'general' => ['label' => __('General', 'forjeon'), 'icon' => '⚙️'],
+			'toolbar' => ['label' => __('Toolbar', 'forjeon'), 'icon' => '🎨'],
+			'features' => ['label' => __('Features', 'forjeon'), 'icon' => '🚀'],
+			'advanced' => ['label' => __('Advanced', 'forjeon'), 'icon' => '🔧'],
+		];
+		
 		// Display settings errors (WordPress will automatically show success message)
 		settings_errors('forjeon_messages');
 		?>
-		<div class="wrap">
-			<h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+		<div class="wrap forjeon-settings-wrap">
+			<h1 class="forjeon-settings-title">
+				<span class="forjeon-logo">🎨</span>
+				<?php echo esc_html(get_admin_page_title()); ?>
+			</h1>
 			
 			<div class="forjeon-settings-header">
-				<p><?php _e('Configure Forjeon settings to customize your block editor enhancement experience.', 'forjeon'); ?></p>
+				<div class="header-content">
+					<p><?php _e('Configure Forjeon to customize your block editor enhancement experience.', 'forjeon'); ?></p>
+				</div>
+				<div class="header-help">
+					<div class="help-item">
+						<strong><?php _e('Keyboard Shortcuts:', 'forjeon'); ?></strong>
+						<code>Alt + F</code> <?php _e('Toggle toolbar', 'forjeon'); ?> • 
+						<code>Escape</code> <?php _e('Close toolbar', 'forjeon'); ?>
+					</div>
+					<div class="help-item">
+						<strong><?php _e('Status:', 'forjeon'); ?></strong>
+						<span class="status-active"><?php _e('Active & Running', 'forjeon'); ?></span>
+					</div>
+				</div>
 			</div>
 			
-			<form action="options.php" method="post">
-				<?php
-				settings_fields('forjeon_settings_group');
-				do_settings_sections('forjeon-settings');
-				submit_button(__('Save Settings', 'forjeon'));
-				?>
-			</form>
-			
-			<div class="forjeon-settings-footer">
-				<h3><?php _e('Need Help?', 'forjeon'); ?></h3>
-				<p><?php _e('Visit our documentation for guides and troubleshooting tips.', 'forjeon'); ?></p>
-				<ul>
-					<li><strong><?php _e('Keyboard Shortcuts:', 'forjeon'); ?></strong> <?php _e('Alt+F to toggle toolbar, Escape to close', 'forjeon'); ?></li>
-					<li><strong><?php _e('Current Version:', 'forjeon'); ?></strong> <?php echo esc_html(FORJEON_VERSION); ?></li>
-					<li><strong><?php _e('Plugin Status:', 'forjeon'); ?></strong> <span style="color: #46b450;"><?php _e('Active', 'forjeon'); ?></span></li>
-				</ul>
+			<!-- Tab Navigation with Save Button -->
+			<div class="forjeon-tab-wrapper">
+				<nav class="forjeon-tab-nav">
+					<?php foreach ($tabs as $tab_key => $tab_data): ?>
+						<a href="<?php echo esc_url(add_query_arg('tab', $tab_key)); ?>" 
+						   class="forjeon-tab <?php echo $current_tab === $tab_key ? 'active' : ''; ?>">
+							<span class="tab-icon"><?php echo $tab_data['icon']; ?></span>
+							<span class="tab-label"><?php echo esc_html($tab_data['label']); ?></span>
+						</a>
+					<?php endforeach; ?>
+				</nav>
+				<div class="forjeon-save-button-wrapper">
+					<?php submit_button(__('Save Settings', 'forjeon'), 'primary', 'submit', false, ['form' => 'forjeon-settings-form']); ?>
+				</div>
 			</div>
+			
+			<!-- Tab Content -->
+			<div class="forjeon-tab-content">
+				<form id="forjeon-settings-form" action="options.php" method="post">
+					<?php
+					settings_fields('forjeon_settings_group');
+					
+					// Render different sections based on active tab
+					switch ($current_tab) {
+						case 'general':
+							$this->render_tab_content('general', [
+								'forjeon_general_section'
+							]);
+							break;
+						case 'toolbar':
+							$this->render_tab_content('toolbar', [
+								'forjeon_toolbar_section'
+							]);
+							break;
+						case 'features':
+							$this->render_tab_content('features', [
+								'forjeon_features_section'
+							]);
+							break;
+						case 'advanced':
+							$this->render_tab_content('advanced', [
+								'forjeon_advanced_section'
+							]);
+							break;
+					}
+					?>
+				</form>
+			</div>
+			
 		</div>
 		
 		<style>
+		.forjeon-settings-wrap {
+			max-width: 1200px;
+		}
+		
+		.forjeon-settings-title {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin-bottom: 20px;
+			font-size: 24px;
+			font-weight: 600;
+		}
+		
+		.forjeon-logo {
+			font-size: 32px;
+		}
+		
+		.forjeon-version {
+			background: #0073aa;
+			color: white;
+			padding: 4px 8px;
+			border-radius: 12px;
+			font-size: 12px;
+			font-weight: 500;
+		}
+		
 		.forjeon-settings-header {
-			background: #f9f9f9;
-			border: 1px solid #e5e5e5;
-			padding: 15px;
-			margin: 20px 0;
-			border-radius: 4px;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: white;
+			padding: 24px;
+			margin: 0 0 24px 0;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+			display: grid;
+			grid-template-columns: 1fr auto;
+			gap: 32px;
+			align-items: center;
 		}
 		
-		.forjeon-settings-footer {
-			background: #fff;
-			border: 1px solid #e5e5e5;
-			padding: 20px;
-			margin: 30px 0;
-			border-radius: 4px;
+		.header-content p {
+			margin: 0;
+			font-size: 16px;
+			opacity: 0.95;
 		}
 		
-		.forjeon-settings-footer h3 {
-			margin-top: 0;
+		.header-help {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			font-size: 14px;
 		}
 		
-		.forjeon-settings-footer ul {
-			list-style: disc;
-			margin-left: 20px;
+		.help-item {
+			opacity: 0.95;
+		}
+		
+		.help-item code {
+			background: rgba(255,255,255,0.2);
+			color: white;
+			padding: 2px 6px;
+			border-radius: 3px;
+			font-family: monospace;
+			font-size: 12px;
+		}
+		
+		.status-active {
+			color: #46b450;
+			font-weight: 600;
+			background: rgba(255,255,255,0.9);
+			padding: 2px 8px;
+			border-radius: 12px;
+			font-size: 12px;
+		}
+		
+		.forjeon-tab-wrapper {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-end;
+			background: #f1f1f1;
+			border-radius: 8px 8px 0 0;
+			border-bottom: 1px solid #ddd;
+		}
+		
+		.forjeon-tab-nav {
+			display: flex;
+			gap: 0;
+		}
+		
+		.forjeon-save-button-wrapper {
+			padding: 8px 16px;
+		}
+		
+		.forjeon-save-button-wrapper .button-primary {
+			height: 36px;
+			padding: 0 16px;
+			font-weight: 600;
+			border-radius: 6px;
+			border: none;
+			background: #0073aa;
+			box-shadow: 0 2px 4px rgba(0,115,170,0.3);
+			transition: all 0.2s ease;
+		}
+		
+		.forjeon-save-button-wrapper .button-primary:hover {
+			background: #005a87;
+			transform: translateY(-1px);
+			box-shadow: 0 4px 8px rgba(0,115,170,0.4);
+		}
+		
+		.forjeon-tab {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 16px 24px;
+			text-decoration: none;
+			color: #666;
+			border-bottom: 3px solid transparent;
+			transition: all 0.2s ease;
+			font-weight: 500;
+		}
+		
+		.forjeon-tab:hover {
+			background: #e8e8e8;
+			color: #333;
+		}
+		
+		.forjeon-tab.active {
+			background: white;
+			color: #0073aa;
+			border-bottom-color: #0073aa;
+		}
+		
+		.tab-icon {
+			font-size: 16px;
+		}
+		
+		.forjeon-tab-content {
+			background: white;
+			padding: 32px;
+			border-radius: 0 0 8px 8px;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		}
+		
+		
+		
+		/* Settings Field Styling */
+		.forjeon-section-title {
+			color: #333;
+			font-size: 18px;
+			margin: 0 0 16px 0;
+			padding-bottom: 8px;
+			border-bottom: 2px solid #0073aa;
+		}
+		
+		.form-table th {
+			font-weight: 600;
+			color: #333;
+			width: 200px;
+		}
+		
+		.form-table td {
+			padding-left: 20px;
+		}
+		
+		.form-table td input[type="checkbox"] {
+			margin: 0 8px 0 0;
+			vertical-align: middle;
+		}
+		
+		.form-table td label {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			cursor: pointer;
+			line-height: 1.4;
+		}
+		
+		.form-table select {
+			min-width: 200px;
+		}
+		
+		.description {
+			color: #666;
+			font-style: italic;
+			margin-top: 4px;
+			line-height: 1.4;
+		}
+		
+		@media (max-width: 782px) {
+			.forjeon-tab-content {
+				padding: 20px;
+			}
+			
+			.forjeon-tab {
+				padding: 12px 16px;
+			}
+			
+			.forjeon-settings-title {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 8px;
+			}
+			
+			.forjeon-settings-header {
+				grid-template-columns: 1fr;
+				gap: 16px;
+				text-align: center;
+			}
+			
+			.header-help {
+				align-items: center;
+			}
+			
+			.forjeon-tab-wrapper {
+				flex-direction: column;
+				align-items: stretch;
+			}
+			
+			.forjeon-save-button-wrapper {
+				order: -1;
+				padding: 12px 16px;
+				text-align: center;
+				background: #e8e8e8;
+				border-bottom: 1px solid #ddd;
+			}
 		}
 		</style>
 		<?php
+	}
+	
+	/**
+	 * Render getting started page (placeholder for future implementation)
+	 */
+	public function render_getting_started_page(): void {
+		if (!current_user_can('manage_options')) {
+			return;
+		}
+		?>
+		<div class="wrap forjeon-settings-wrap">
+			<h1 class="forjeon-settings-title">
+				<span class="forjeon-logo">🎨</span>
+				<?php _e('Getting Started with Forjeon', 'forjeon'); ?>
+			</h1>
+			
+			<div class="forjeon-settings-header">
+				<div class="header-content">
+					<p><?php _e('Learn how to use Forjeon to enhance your block editor experience.', 'forjeon'); ?></p>
+				</div>
+			</div>
+			
+			<div class="forjeon-tab-content">
+				<div style="text-align: center; padding: 60px 20px;">
+					<h2><?php _e('Coming Soon!', 'forjeon'); ?></h2>
+					<p><?php _e('This section will contain helpful guides and tutorials to get you started with Forjeon.', 'forjeon'); ?></p>
+					<p>
+						<a href="<?php echo admin_url('admin.php?page=forjeon-settings'); ?>" class="button button-primary">
+							<?php _e('Go to Settings', 'forjeon'); ?>
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+	
+	/**
+	 * Render tab content
+	 */
+	private function render_tab_content(string $tab_name, array $sections): void {
+		foreach ($sections as $section) {
+			$this->do_settings_sections_for($section, 'forjeon-settings');
+		}
+	}
+	
+	/**
+	 * Helper function to render specific sections
+	 */
+	private function do_settings_sections_for(string $section_id, string $page): void {
+		global $wp_settings_sections, $wp_settings_fields;
+		
+		if (!isset($wp_settings_sections[$page][$section_id])) {
+			return;
+		}
+		
+		$section = $wp_settings_sections[$page][$section_id];
+		
+		if ($section['title']) {
+			echo "<h2 class='forjeon-section-title'>{$section['title']}</h2>\n";
+		}
+		
+		if ($section['callback']) {
+			call_user_func($section['callback'], $section);
+		}
+		
+		if (!isset($wp_settings_fields[$page][$section_id])) {
+			return;
+		}
+		
+		echo '<table class="form-table" role="presentation">';
+		do_settings_fields($page, $section_id);
+		echo '</table>';
 	}
 	
 	/**
@@ -391,6 +769,48 @@ class Settings {
 	}
 	
 	/**
+	 * Render feature flag field
+	 */
+	public function render_feature_flag_field(array $args): void {
+		$settings = $this->get_settings();
+		$feature_flags = $settings['feature_flags'] ?? [];
+		$value = $feature_flags[$args['field']] ?? false;
+		$disabled = $args['disabled'] ?? false;
+		
+		$field_name = sprintf('%s[feature_flags][%s]', self::OPTION_NAME, $args['field']);
+		
+		printf(
+			'<label><input type="checkbox" name="%s" value="1" %s %s> %s</label>',
+			esc_attr($field_name),
+			checked($value, true, false),
+			disabled($disabled, true, false),
+			esc_html($args['description'])
+		);
+		
+		if ($disabled) {
+			echo '<p class="description" style="color: #ff6b35; font-weight: 500;">' . 
+				 __('This feature is not yet available. It will be enabled in future updates.', 'forjeon') . 
+				 '</p>';
+		}
+	}
+	
+	/**
+	 * Get feature description
+	 */
+	private function get_feature_description(string $feature): string {
+		$descriptions = [
+			'typography_tab' => __('Enable advanced typography controls in the toolbar.', 'forjeon'),
+			'design_tab' => __('Enable design controls for backgrounds, borders, and colors.', 'forjeon'),
+			'layout_tab' => __('Enable layout controls for spacing, positioning, and dimensions.', 'forjeon'),
+			'effects_tab' => __('Enable visual effects like shadows, animations, and transforms.', 'forjeon'),
+			'blocks_tab' => __('Enable custom blocks library and block management.', 'forjeon'),
+			'advanced_tab' => __('Enable advanced CSS editing and custom code injection.', 'forjeon'),
+		];
+		
+		return $descriptions[$feature] ?? '';
+	}
+	
+	/**
 	 * Sanitize settings
 	 */
 	public function sanitize_settings(array $input): array {
@@ -425,6 +845,9 @@ class Settings {
 				}
 			}
 		}
+		
+		// User roles access (for future implementation)
+		$sanitized['user_roles_access'] = $this->default_settings['user_roles_access'];
 		
 		return $sanitized;
 	}
