@@ -40,11 +40,9 @@ jobs:
 
     - name: Run PHP linting
       run: composer lint
-      continue-on-error: true
-      
+
     - name: Run PHP tests
       run: composer test
-      continue-on-error: true
 
     - name: Build JavaScript assets
       run: npm run build
@@ -82,7 +80,6 @@ jobs:
 
     - name: Run security check
       run: composer security
-      continue-on-error: true
 
   code-quality:
     runs-on: ubuntu-latest
@@ -101,7 +98,6 @@ jobs:
 
     - name: Check WordPress coding standards
       run: composer lint
-      continue-on-error: true
 
   build-check:
     runs-on: ubuntu-latest
