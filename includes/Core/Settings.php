@@ -38,7 +38,7 @@ class Settings {
 		'enable_toolbar_animations' => true,
 		'feature_flags' => [
 			'typography_tab' => true,
-			'design_tab' => false,
+			'design_tab' => true,
 			'layout_tab' => false,
 			'effects_tab' => false,
 			'blocks_tab' => false,
@@ -286,12 +286,14 @@ class Settings {
 		// Feature flags
 		$features = [
 			'typography_tab' => __('Typography Tab', 'forjeon'),
-			'design_tab' => __('Design Tab (Coming Soon)', 'forjeon'),
+			'design_tab' => __('Design Tab', 'forjeon'),
 			'layout_tab' => __('Layout Tab (Coming Soon)', 'forjeon'),
 			'effects_tab' => __('Effects Tab (Coming Soon)', 'forjeon'),
 			'blocks_tab' => __('Blocks Tab (Coming Soon)', 'forjeon'),
 			'advanced_tab' => __('Advanced Tab (Coming Soon)', 'forjeon'),
 		];
+		
+		$enabled_features = ['typography_tab', 'design_tab'];
 		
 		foreach ($features as $feature_key => $feature_label) {
 			add_settings_field(
@@ -303,7 +305,7 @@ class Settings {
 				[
 					'field' => $feature_key,
 					'description' => $this->get_feature_description($feature_key),
-					'disabled' => $feature_key !== 'typography_tab'
+					'disabled' => !in_array($feature_key, $enabled_features)
 				]
 			);
 		}

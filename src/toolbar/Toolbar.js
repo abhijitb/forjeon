@@ -51,7 +51,7 @@ export function Toolbar() {
 			title: __('Design', 'forjeon'),
 			icon: '🎨',
 			component: DesignTab,
-			disabled: true // Will enable in Phase 2
+			disabled: false // Enabled in Phase 2.1
 		},
 		{
 			name: 'typography',
