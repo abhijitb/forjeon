@@ -1,0 +1,7 @@
+# Global owner - you will be automatically requested to review all PRs
+* @abhijitb
+
+# Specific files that need extra attention
+*.php @abhijitb
+readme.txt @abhijitb
+.github/ @abhijitb

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Pre-push hook to prevent direct pushes to main branch.
+# To install: cp .githooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+
+protected_branch='main'
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [ $protected_branch = $current_branch ]; then
+    echo "🚫 Direct pushes to the '$protected_branch' branch are not allowed."
+    echo ""
+    echo "To push your changes:"
+    echo "1. Create a feature branch: git checkout -b feature/your-feature-name"
+    echo "2. Push to feature branch: git push origin feature/your-feature-name"
+    echo "3. Create a Pull Request on GitHub"
+    echo ""
+    echo "If you need to push to main for maintenance, use:"
+    echo "git push --no-verify origin main"
+    echo ""
+    exit 1
+fi
+
+exit 0

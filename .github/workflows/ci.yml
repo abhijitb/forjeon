@@ -1,0 +1,141 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: [8.2, 8.3]
+        node-version: [18, 20]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP ${{ matrix.php-version }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: mbstring, xml, ctype, json, curl, zip
+        coverage: xdebug
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install PHP dependencies
+      run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+    - name: Install Node.js dependencies
+      run: npm ci
+
+    - name: Run PHP linting
+      run: composer lint
+
+    - name: Run PHP static analysis
+      run: composer phpstan
+
+    - name: Run PHP tests
+      run: composer test:coverage
+
+    - name: Build JavaScript assets
+      run: npm run build
+
+    - name: Run JavaScript tests (if any)
+      run: |
+        if [ -f "package.json" ] && grep -q '"test"' package.json; then
+          npm test
+        else
+          echo "No JavaScript tests found, skipping..."
+        fi
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      if: matrix.php-version == '8.2' && matrix.node-version == '18'
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false
+
+  security-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.2
+
+    - name: Install dependencies
+      run: composer install --no-interaction --prefer-dist
+
+    - name: Run security check
+      run: composer security
+
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.2
+
+    - name: Install dependencies
+      run: composer install --no-interaction --prefer-dist
+
+    - name: Check WordPress coding standards
+      run: composer lint
+
+    - name: Run PHPStan analysis
+      run: composer phpstan
+
+  build-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build assets
+      run: npm run build
+
+    - name: Check for build warnings
+      run: |
+        if npm run build 2>&1 | grep -i warning; then
+          echo "Build warnings found!"
+          exit 1
+        else
+          echo "Build completed without warnings"
+        fi
+
+    - name: Verify build artifacts
+      run: |
+        if [ ! -f "build/index.js" ]; then
+          echo "Build artifacts missing!"
+          exit 1
+        fi
+        echo "Build artifacts verified"
