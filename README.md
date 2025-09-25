@@ -102,9 +102,6 @@ composer lint
 # Auto-fix linting issues
 composer lint:fix
 
-# Run PHPStan analysis
-composer phpstan
-
 # Security check
 composer security
 ```
