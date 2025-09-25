@@ -21,43 +21,43 @@
  * @license GPL v2 or later
  */
 
-// Prevent direct access
+// Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Define plugin constants
+// Define plugin constants.
 define( 'FORJEON_VERSION', '1.0.0' );
 define( 'FORJEON_PLUGIN_FILE', __FILE__ );
 define( 'FORJEON_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FORJEON_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'FORJEON_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
-// Load Composer autoloader
+// Load Composer autoloader.
 if ( file_exists( FORJEON_PLUGIN_DIR . 'vendor/autoload.php' ) ) {
 	require_once FORJEON_PLUGIN_DIR . 'vendor/autoload.php';
 }
 
-// Initialize the plugin
+// Initialize the plugin.
 add_action( 'plugins_loaded', 'forjeon_init' );
 
 /**
  * Initialize the Forjeon plugin
  */
 function forjeon_init() {
-	// Check WordPress version
+	// Check WordPress version.
 	if ( version_compare( get_bloginfo( 'version' ), '6.5', '<' ) ) {
 		add_action( 'admin_notices', 'forjeon_wordpress_version_notice' );
 		return;
 	}
 
-	// Check PHP version
+	// Check PHP version.
 	if ( version_compare( PHP_VERSION, '8.2', '<' ) ) {
 		add_action( 'admin_notices', 'forjeon_php_version_notice' );
 		return;
 	}
 
-	// Initialize the main plugin class using singleton pattern
+	// Initialize the main plugin class using singleton pattern.
 	$forjeon = \Forjeon\Core\Plugin::get_instance();
 	$forjeon->init();
 }
@@ -105,11 +105,14 @@ function forjeon_php_version_notice() {
  */
 register_activation_hook( __FILE__, 'forjeon_activate' );
 
+/**
+ * Plugin activation hook.
+ */
 function forjeon_activate() {
-	// Set default options
+	// Set default options.
 	add_option( 'forjeon_version', FORJEON_VERSION );
-	
-	// Flush rewrite rules
+
+	// Flush rewrite rules.
 	flush_rewrite_rules();
 }
 
@@ -118,7 +121,10 @@ function forjeon_activate() {
  */
 register_deactivation_hook( __FILE__, 'forjeon_deactivate' );
 
+/**
+ * Plugin deactivation hook.
+ */
 function forjeon_deactivate() {
-	// Clean up if needed
+	// Clean up if needed.
 	flush_rewrite_rules();
 }

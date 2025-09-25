@@ -17,13 +17,13 @@ class Tabs_Block {
 	 * Initialize the tabs block
 	 */
 	public function init() {
-		// Register the block
+		// Register the block.
 		add_action( 'init', array( $this, 'register_block' ) );
-		
-		// Add block category
+
+		// Add block category.
 		add_filter( 'block_categories_all', array( $this, 'add_block_category' ), 10, 2 );
-		
-		// Enqueue frontend assets
+
+		// Enqueue frontend assets.
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_assets' ) );
 	}
 
@@ -31,18 +31,19 @@ class Tabs_Block {
 	 * Register the tabs block
 	 */
 	public function register_block() {
-		// Register editor script
+		// Register editor script.
 		$editor_asset_file = FORJEON_PLUGIN_DIR . 'build/blocks/tabs/index.asset.php';
 		$editor_asset_data = file_exists( $editor_asset_file ) ? include $editor_asset_file : array(
 			'dependencies' => array(),
-			'version' => FORJEON_VERSION,
+			'version'      => FORJEON_VERSION,
 		);
 
 		wp_register_script(
 			'forjeon-tabs-editor',
 			FORJEON_PLUGIN_URL . 'build/blocks/tabs/index.js',
 			$editor_asset_data['dependencies'],
-			$editor_asset_data['version']
+			$editor_asset_data['version'],
+			false
 		);
 
 		wp_register_style(
@@ -59,8 +60,8 @@ class Tabs_Block {
 			$editor_asset_data['version']
 		);
 
-		// Register the block using block.json
-		register_block_type( 
+		// Register the block using block.json.
+		register_block_type(
 			FORJEON_PLUGIN_DIR . 'src/blocks/content/tabs/block.json',
 			array(
 				'render_callback' => array( $this, 'render_block' ),
@@ -71,19 +72,18 @@ class Tabs_Block {
 	/**
 	 * Add Forjeon block category
 	 *
-	 * @param array                   $categories Array of block categories.
-	 * @param WP_Block_Editor_Context $editor_context The current block editor context.
+	 * @param array $categories Array of block categories.
 	 * @return array Modified categories array.
 	 */
-	public function add_block_category( $categories, $editor_context ) {
-		// Check if our category already exists
+	public function add_block_category( $categories ) {
+		// Check if our category already exists.
 		foreach ( $categories as $category ) {
-			if ( $category['slug'] === 'forjeon' ) {
+			if ( 'forjeon' === $category['slug'] ) {
 				return $categories;
 			}
 		}
 
-		// Add our category at the beginning
+		// Add our category at the beginning.
 		return array_merge(
 			array(
 				array(
@@ -99,13 +99,10 @@ class Tabs_Block {
 	/**
 	 * Render the tabs block
 	 *
-	 * @param array    $attributes Block attributes.
-	 * @param string   $content    Block content.
-	 * @param WP_Block $block      Block instance.
-	 * @return string  Rendered block HTML.
+	 * @return string Rendered block HTML.
 	 */
-	public function render_block( $attributes, $content, $block ) {
-		// Include the render template  
+	public function render_block() {
+		// Include the render template.
 		return include FORJEON_PLUGIN_DIR . 'templates/blocks/tabs/render.php';
 	}
 
@@ -113,19 +110,19 @@ class Tabs_Block {
 	 * Enqueue frontend assets
 	 */
 	public function enqueue_frontend_assets() {
-		// Only enqueue if we have tabs blocks on the page
+		// Only enqueue if we have tabs blocks on the page.
 		if ( ! $this->has_tabs_blocks() ) {
 			return;
 		}
 
-		// Get frontend asset file info
+		// Get frontend asset file info.
 		$frontend_asset_file = FORJEON_PLUGIN_DIR . 'build/tabs-frontend.asset.php';
 		$frontend_asset_data = file_exists( $frontend_asset_file ) ? include $frontend_asset_file : array(
 			'dependencies' => array(),
-			'version' => FORJEON_VERSION,
+			'version'      => FORJEON_VERSION,
 		);
 
-		// Enqueue the frontend JavaScript
+		// Enqueue the frontend JavaScript.
 		wp_enqueue_script(
 			'forjeon-tabs-frontend',
 			FORJEON_PLUGIN_URL . 'build/tabs-frontend.js',
@@ -134,7 +131,7 @@ class Tabs_Block {
 			true
 		);
 
-		// Enqueue the frontend styles (included in main styles)
+		// Enqueue the frontend styles (included in main styles).
 		wp_enqueue_style(
 			'forjeon-tabs-frontend',
 			FORJEON_PLUGIN_URL . 'build/index.css',
@@ -142,15 +139,15 @@ class Tabs_Block {
 			$frontend_asset_data['version']
 		);
 
-		// Localize script with settings
+		// Localize script with settings.
 		wp_localize_script(
 			'forjeon-tabs-frontend',
 			'forjeonTabsData',
 			array(
-				'breakpoint' => 768,
-				'animationDuration' => 300,
+				'breakpoint'               => 768,
+				'animationDuration'        => 300,
 				'enableKeyboardNavigation' => true,
-				'enableSwipeOnMobile' => true,
+				'enableSwipeOnMobile'      => true,
 			)
 		);
 	}
@@ -161,7 +158,7 @@ class Tabs_Block {
 	 * @return bool
 	 */
 	private function has_tabs_blocks() {
-		// Check if we're in the main query
+		// Check if we're in the main query.
 		if ( ! is_main_query() || is_admin() ) {
 			return false;
 		}
@@ -171,7 +168,7 @@ class Tabs_Block {
 			return false;
 		}
 
-		// Parse blocks and check for tabs
+		// Parse blocks and check for tabs.
 		$blocks = parse_blocks( $post->post_content );
 		return $this->has_tabs_in_blocks( $blocks );
 	}
@@ -184,12 +181,12 @@ class Tabs_Block {
 	 */
 	private function has_tabs_in_blocks( $blocks ) {
 		foreach ( $blocks as $block ) {
-			// Check if this is a tabs block
-			if ( $block['blockName'] === 'forjeon/tabs' ) {
+			// Check if this is a tabs block.
+			if ( 'forjeon/tabs' === $block['blockName'] ) {
 				return true;
 			}
 
-			// Check inner blocks
+			// Check inner blocks.
 			if ( ! empty( $block['innerBlocks'] ) ) {
 				if ( $this->has_tabs_in_blocks( $block['innerBlocks'] ) ) {
 					return true;
@@ -208,18 +205,18 @@ class Tabs_Block {
 	public function get_default_tabs() {
 		return array(
 			array(
-				'title' => __( 'Tab 1', 'forjeon' ),
-				'id' => 'tab-1',
+				'title'    => __( 'Tab 1', 'forjeon' ),
+				'id'       => 'tab-1',
 				'isActive' => true,
 			),
 			array(
-				'title' => __( 'Tab 2', 'forjeon' ),
-				'id' => 'tab-2',
+				'title'    => __( 'Tab 2', 'forjeon' ),
+				'id'       => 'tab-2',
 				'isActive' => false,
 			),
 			array(
-				'title' => __( 'Tab 3', 'forjeon' ),
-				'id' => 'tab-3',
+				'title'    => __( 'Tab 3', 'forjeon' ),
+				'id'       => 'tab-3',
 				'isActive' => false,
 			),
 		);
@@ -239,8 +236,9 @@ class Tabs_Block {
 		$sanitized = array();
 		foreach ( $tabs as $index => $tab ) {
 			$sanitized[ $index ] = array(
-				'title' => sanitize_text_field( $tab['title'] ?? sprintf( __( 'Tab %d', 'forjeon' ), $index + 1 ) ),
-				'id' => sanitize_html_class( $tab['id'] ?? 'tab-' . ( $index + 1 ) ),
+				// translators: %d is the tab index.
+				'title'    => sanitize_text_field( $tab['title'] ?? sprintf( __( 'Tab %d', 'forjeon' ), $index + 1 ) ),
+				'id'       => sanitize_html_class( $tab['id'] ?? 'tab-' . ( $index + 1 ) ),
 				'isActive' => (bool) ( $tab['isActive'] ?? false ),
 			);
 		}
@@ -257,12 +255,13 @@ class Tabs_Block {
 	 */
 	public static function render_tabs_navigation( $tabs, $active_tab ) {
 		$nav_html = '<div class="forjeon-tabs-nav" role="tablist" aria-orientation="horizontal">';
-		
+
 		foreach ( $tabs as $index => $tab ) {
-			$tab_id = sanitize_html_class( $tab['id'] ?? 'tab-' . $index );
+			$tab_id    = sanitize_html_class( $tab['id'] ?? 'tab-' . $index );
 			$is_active = $index === $active_tab;
+			// translators: %d is the tab index.
 			$title = esc_html( $tab['title'] ?? sprintf( __( 'Tab %d', 'forjeon' ), $index + 1 ) );
-			
+
 			$nav_html .= sprintf(
 				'<button class="forjeon-tab-button %s" role="tab" id="%s" aria-controls="%s" aria-selected="%s" tabindex="%s" data-tab-index="%s">%s</button>',
 				$is_active ? 'active' : '',
@@ -274,7 +273,7 @@ class Tabs_Block {
 				$title
 			);
 		}
-		
+
 		$nav_html .= '</div>';
 		return $nav_html;
 	}
@@ -290,9 +289,10 @@ class Tabs_Block {
 	 */
 	public static function render_tab_panel( $tab, $index, $is_active, $enable_accordion ) {
 		$tab_id = sanitize_html_class( $tab['id'] ?? 'tab-' . $index );
-		$title = esc_html( $tab['title'] ?? sprintf( __( 'Tab %d', 'forjeon' ), $index + 1 ) );
+		// translators: %d is the tab index.
+		$title   = esc_html( $tab['title'] ?? sprintf( __( 'Tab %d', 'forjeon' ), $index + 1 ) );
 		$content = $tab['content'] ?? '';
-		
+
 		$panel_html = sprintf(
 			'<div class="forjeon-tab-panel %s" role="tabpanel" id="%s" aria-labelledby="%s" tabindex="0" %s>',
 			$is_active ? 'active' : '',
@@ -300,8 +300,8 @@ class Tabs_Block {
 			esc_attr( $tab_id . '-button' ),
 			$is_active ? '' : 'hidden'
 		);
-		
-		// Add accordion header for mobile
+
+		// Add accordion header for mobile.
 		if ( $enable_accordion ) {
 			$panel_html .= sprintf(
 				'<button class="forjeon-accordion-header" aria-expanded="%s" aria-controls="%s" data-tab-index="%s">%s<span class="forjeon-accordion-icon" aria-hidden="true"></span></button>',
@@ -311,18 +311,18 @@ class Tabs_Block {
 				$title
 			);
 		}
-		
-		// Add tab content
+
+		// Add tab content.
 		$panel_html .= sprintf( '<div class="forjeon-tab-content" id="%s">', esc_attr( $tab_id . '-content' ) );
-		
+
 		if ( ! empty( $content ) ) {
 			$panel_html .= wp_kses_post( $content );
 		} else {
 			$panel_html .= '<p>' . esc_html__( 'Add content to this tab in the editor.', 'forjeon' ) . '</p>';
 		}
-		
+
 		$panel_html .= '</div></div>';
-		
+
 		return $panel_html;
 	}
 }
