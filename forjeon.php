@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Forjeon - Advanced Typography Controls
+ * Plugin Name: Forjeon - Gutenberg Enhancement Plugin
  * Plugin URI: https://github.com/abhijitb/forjeon
  * Description: Enhance Gutenberg with advanced typography controls including line height, letter spacing, and text shadows. Crafted blocks, limitless design.
  * Version: 1.0.0
