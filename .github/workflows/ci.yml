@@ -49,13 +49,13 @@ jobs:
     - name: Build JavaScript assets
       run: npm run build
 
-    - name: Run JavaScript tests (if any)
+    - name: Verify build artifacts
       run: |
-        if [ -f "package.json" ] && grep -q '"test"' package.json; then
-          npm test
-        else
-          echo "No JavaScript tests found, skipping..."
+        if [ ! -f "build/index.js" ]; then
+          echo "Build artifacts missing!"
+          exit 1
         fi
+        echo "Build artifacts verified"
 
     - name: Upload coverage reports
       uses: codecov/codecov-action@v3

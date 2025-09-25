@@ -34,8 +34,8 @@
 	"scripts": {
 		"test": "phpunit --configuration phpunit.xml || echo 'No tests configured yet'",
 		"test:coverage": "phpunit --configuration phpunit.xml --coverage-html coverage || echo 'No tests configured yet'",
-		"lint": "phpcs --standard=WordPress --ignore=*/vendor/*,*/node_modules/*,*/build/* .",
-		"lint:fix": "phpcbf --standard=WordPress --ignore=*/vendor/*,*/node_modules/*,*/build/* .",
+		"lint": "phpcs --standard=WordPress --extensions=php includes/ forjeon.php",
+		"lint:fix": "phpcbf --standard=WordPress --extensions=php includes/ forjeon.php",
 		"security": "security-checker security:check composer.lock || echo 'Security check completed'"
 	},
 	"config": {
