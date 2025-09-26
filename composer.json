@@ -22,9 +22,9 @@
 		"enlightn/security-checker": "^2.0"
 	},
 	"autoload": {
-		"psr-4": {
-			"Forjeon\\": "includes/"
-		}
+		"classmap": [
+			"includes/"
+		]
 	},
 	"autoload-dev": {
 		"psr-4": {
