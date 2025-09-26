@@ -84,6 +84,5 @@
 	},
 	"editorScript": "forjeon-tabs-editor",
 	"editorStyle": "forjeon-tabs-editor",
-	"style": "forjeon-tabs-frontend",
-	"render": "file:./render.php"
+	"style": "forjeon-tabs-frontend"
 }

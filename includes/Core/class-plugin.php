@@ -71,7 +71,7 @@ class Plugin {
 	 * Constructor
 	 */
 	private function __construct() {
-		// Initialize components
+		// Initialize components.
 		$this->init_components();
 	}
 
@@ -79,19 +79,19 @@ class Plugin {
 	 * Initialize plugin components
 	 */
 	private function init_components() {
-		// Initialize settings first
+		// Initialize settings first.
 		$this->settings = new Settings();
 
-		// Initialize block extensions
+		// Initialize block extensions.
 		$this->block_extensions = new \Forjeon\Legacy\Block_Extensions();
 
-		// Initialize typography controls
+		// Initialize typography controls.
 		$this->typography_controls = new \Forjeon\Legacy\Typography_Controls();
 
-		// Initialize CSS generator
+		// Initialize CSS generator.
 		$this->css_generator = new \Forjeon\Utilities\CSS_Generator();
 
-		// Initialize tabs block
+		// Initialize tabs block.
 		$this->tabs_block = new \Forjeon\Blocks\Content\Tabs_Block();
 	}
 
@@ -99,17 +99,17 @@ class Plugin {
 	 * Initialize the plugin
 	 */
 	public function init() {
-		// Hook into WordPress
+		// Hook into WordPress.
 		$this->setup_hooks();
 
-		// Initialize components
+		// Initialize components.
 		$this->settings->init();
 		$this->block_extensions->init();
 		$this->typography_controls->init();
 		$this->css_generator->init();
 		$this->tabs_block->init();
 
-		// Load text domain for internationalization
+		// Load text domain for internationalization.
 		$this->load_textdomain();
 	}
 
@@ -117,13 +117,13 @@ class Plugin {
 	 * Set up WordPress hooks
 	 */
 	private function setup_hooks() {
-		// Admin hooks
+		// Admin hooks.
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 
-		// Block editor hooks
+		// Block editor hooks.
 		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
 
-		// Plugin action links
+		// Plugin action links.
 		add_filter( 'plugin_action_links_' . FORJEON_PLUGIN_BASENAME, array( $this, 'plugin_action_links' ) );
 	}
 
@@ -131,7 +131,7 @@ class Plugin {
 	 * Admin initialization
 	 */
 	public function admin_init() {
-		// Add admin notices if needed
+		// Add admin notices if needed.
 		if ( ! $this->check_requirements() ) {
 			add_action( 'admin_notices', array( $this, 'requirements_notice' ) );
 		}
@@ -141,15 +141,15 @@ class Plugin {
 	 * Enqueue block editor assets
 	 */
 	public function enqueue_block_editor_assets() {
-		// Check if current user should have access to the toolbar
+		// Check if current user should have access to the toolbar.
 		if ( ! $this->settings->should_load_toolbar() ) {
 			return;
 		}
-		
-		// Get asset dependencies and version
-		$asset_file = include( FORJEON_PLUGIN_DIR . 'build/index.asset.php' );
 
-		// Enqueue the main JavaScript file
+		// Get asset dependencies and version.
+		$asset_file = include FORJEON_PLUGIN_DIR . 'build/index.asset.php';
+
+		// Enqueue the main JavaScript file.
 		wp_enqueue_script(
 			'forjeon-block-editor',
 			FORJEON_PLUGIN_URL . 'build/index.js',
@@ -158,39 +158,39 @@ class Plugin {
 			true
 		);
 
-		// Get current user preferences
-		$user_preferences = $this->settings->get_user_preferences_for_user(get_current_user_id());
-		$plugin_settings = $this->settings->get_settings();
+		// Get current user preferences.
+		$user_preferences = $this->settings->get_user_preferences_for_user( get_current_user_id() );
+		$plugin_settings  = $this->settings->get_settings();
 
-		// Localize script with data
+		// Localize script with data.
 		wp_localize_script(
 			'forjeon-block-editor',
 			'forjeonData',
 			array(
-				'version' => FORJEON_VERSION,
-				'pluginUrl' => FORJEON_PLUGIN_URL,
-				'nonce' => wp_create_nonce( 'forjeon_nonce' ),
+				'version'              => FORJEON_VERSION,
+				'pluginUrl'            => FORJEON_PLUGIN_URL,
+				'nonce'                => wp_create_nonce( 'forjeon_nonce' ),
 				'userPreferencesNonce' => wp_create_nonce( 'forjeon_user_preferences' ),
-				'settings' => $plugin_settings,
-				'userPreferences' => $user_preferences,
-				'isAdmin' => current_user_can( 'manage_options' ),
-				'currentUserId' => get_current_user_id(),
-				'typography' => array(
+				'settings'             => $plugin_settings,
+				'userPreferences'      => $user_preferences,
+				'isAdmin'              => current_user_can( 'manage_options' ),
+				'currentUserId'        => get_current_user_id(),
+				'typography'           => array(
 					'defaults' => $this->get_typography_defaults(),
-					'presets' => $this->get_text_shadow_presets(),
+					'presets'  => $this->get_text_shadow_presets(),
 				),
-				'integration' => array(
-					'toolbar_enabled' => $this->settings->get_setting( 'toolbar_enabled', true ),
+				'integration'          => array(
+					'toolbar_enabled'       => $this->settings->get_setting( 'toolbar_enabled', true ),
 					'header_button_enabled' => $this->settings->get_setting( 'header_button_enabled', true ),
-					'keyboard_shortcuts' => $this->settings->get_setting( 'keyboard_shortcuts', true ),
+					'keyboard_shortcuts'    => $this->settings->get_setting( 'keyboard_shortcuts', true ),
 					'auto_save_preferences' => $this->settings->get_setting( 'auto_save_preferences', true ),
-					'debug_mode' => $this->settings->get_setting( 'debug_mode', false ),
+					'debug_mode'            => $this->settings->get_setting( 'debug_mode', false ),
 				),
-				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'ajaxUrl'              => admin_url( 'admin-ajax.php' ),
 			)
 		);
 
-		// Enqueue block editor styles
+		// Enqueue block editor styles.
 		wp_enqueue_style(
 			'forjeon-block-editor',
 			FORJEON_PLUGIN_URL . 'build/index.css',
@@ -205,12 +205,12 @@ class Plugin {
 	 * @return bool
 	 */
 	private function check_requirements() {
-		// Check if Gutenberg is available
+		// Check if Gutenberg is available.
 		if ( ! function_exists( 'register_block_type' ) ) {
 			return false;
 		}
 
-		// Check if block editor is available
+		// Check if block editor is available.
 		if ( ! function_exists( 'wp_enqueue_script' ) ) {
 			return false;
 		}
@@ -238,12 +238,12 @@ class Plugin {
 	 */
 	private function get_typography_defaults() {
 		return array(
-			'lineHeight' => array(
-				'min' => 0.5,
-				'max' => 3.0,
-				'step' => 0.1,
+			'lineHeight'    => array(
+				'min'     => 0.5,
+				'max'     => 3.0,
+				'step'    => 0.1,
 				'default' => 1.5,
-				'units' => array(
+				'units'   => array(
 					array(
 						'value' => '',
 						'label' => 'Unitless',
@@ -259,11 +259,11 @@ class Plugin {
 				),
 			),
 			'letterSpacing' => array(
-				'min' => -0.1,
-				'max' => 0.5,
-				'step' => 0.01,
+				'min'     => -0.1,
+				'max'     => 0.5,
+				'step'    => 0.01,
 				'default' => 0,
-				'units' => array(
+				'units'   => array(
 					array(
 						'value' => 'em',
 						'label' => 'em',
@@ -274,23 +274,23 @@ class Plugin {
 					),
 				),
 			),
-			'textShadow' => array(
-				'x' => array(
-					'min' => -10,
-					'max' => 10,
-					'step' => 1,
+			'textShadow'    => array(
+				'x'     => array(
+					'min'     => -10,
+					'max'     => 10,
+					'step'    => 1,
 					'default' => 0,
 				),
-				'y' => array(
-					'min' => -10,
-					'max' => 10,
-					'step' => 1,
+				'y'     => array(
+					'min'     => -10,
+					'max'     => 10,
+					'step'    => 1,
 					'default' => 0,
 				),
-				'blur' => array(
-					'min' => 0,
-					'max' => 20,
-					'step' => 1,
+				'blur'  => array(
+					'min'     => 0,
+					'max'     => 20,
+					'step'    => 1,
 					'default' => 0,
 				),
 				'color' => '#000000',
@@ -305,7 +305,7 @@ class Plugin {
 	 */
 	private function get_text_shadow_presets() {
 		return array(
-			'soft' => array(
+			'soft'   => array(
 				'label' => 'Soft',
 				'value' => '0 2px 4px rgba(0, 0, 0, 0.1)',
 			),
@@ -317,7 +317,7 @@ class Plugin {
 				'label' => 'Strong',
 				'value' => '0 8px 16px rgba(0, 0, 0, 0.2)',
 			),
-			'glow' => array(
+			'glow'   => array(
 				'label' => 'Glow',
 				'value' => '0 0 20px rgba(0, 123, 170, 0.5)',
 			),
@@ -330,12 +330,12 @@ class Plugin {
 	 * @return bool
 	 */
 	private function should_load_frontend_assets() {
-		// Check if we're in the main query
+		// Check if we're in the main query.
 		if ( ! is_main_query() ) {
 			return false;
 		}
 
-		// Check if we have blocks with typography controls
+		// Check if we have blocks with typography controls.
 		global $post;
 		if ( $post && has_blocks( $post ) ) {
 			$blocks = parse_blocks( $post->post_content );
@@ -353,14 +353,14 @@ class Plugin {
 	 */
 	private function has_typography_blocks( $blocks ) {
 		foreach ( $blocks as $block ) {
-			// Check if block has typography attributes
+			// Check if block has typography attributes.
 			if ( isset( $block['attrs']['lineHeight'] ) ||
-				 isset( $block['attrs']['letterSpacing'] ) ||
-				 isset( $block['attrs']['textShadow'] ) ) {
+				isset( $block['attrs']['letterSpacing'] ) ||
+				isset( $block['attrs']['textShadow'] ) ) {
 				return true;
 			}
 
-			// Check inner blocks
+			// Check inner blocks.
 			if ( ! empty( $block['innerBlocks'] ) ) {
 				if ( $this->has_typography_blocks( $block['innerBlocks'] ) ) {
 					return true;

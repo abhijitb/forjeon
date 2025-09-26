@@ -12,7 +12,9 @@
 		"lint:php": "composer run-script lint",
 		"test": "wp-scripts test-unit-js",
 		"test:php": "composer run-script test",
-		"packages-update": "wp-scripts packages-update"
+		"packages-update": "wp-scripts packages-update",
+		"setup": "chmod +x setup-git-hooks.sh && ./setup-git-hooks.sh",
+		"postinstall": "npm run setup"
 	},
 	"keywords": [
 		"wordpress",

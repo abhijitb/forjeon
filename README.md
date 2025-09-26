@@ -87,6 +87,9 @@ npm run build
 # Development mode with watch
 npm run start
 
+# Setup Git hooks for branch protection
+npm run setup
+
 # Run tests
 composer test
 
@@ -98,9 +101,6 @@ composer lint
 
 # Auto-fix linting issues
 composer lint:fix
-
-# Run PHPStan analysis
-composer phpstan
 
 # Security check
 composer security
@@ -261,6 +261,9 @@ We welcome contributions! Key areas for contribution:
 - Use PSR-4 autoloading for PHP classes
 - Write comprehensive tests for new features
 - Maintain backward compatibility
+- **Use feature branches** - No direct commits to main branch
+- **Create Pull Requests** for all changes
+- **Get code reviews** before merging
 
 ## 📄 License
 
@@ -271,6 +274,7 @@ Licensed under **GPL v2 or later** - see the [LICENSE](LICENSE) file for details
 - **Plugin Documentation** - See `/docs/` directory for technical documentation
 - **Implementation Plan** - See `/docs/IMPLEMENTATION_PLAN.md` for detailed roadmap
 - **Plugin Structure** - See `/docs/PLUGIN_STRUCTURE.md` for architecture guide
+- **Branch Protection** - See `/docs/BRANCH_PROTECTION.md` for development workflow
 - **Issues & Bugs** - Report via GitHub Issues
 - **Feature Requests** - Share ideas via GitHub Discussions
 

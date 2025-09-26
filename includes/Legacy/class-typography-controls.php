@@ -17,8 +17,8 @@ class Typography_Controls {
 	 * Initialize the typography controls
 	 */
 	public function init() {
-		// Typography panel is now handled by JavaScript
-		// Assets are enqueued by the main plugin class
+		// Typography panel is now handled by JavaScript.
+		// Assets are enqueued by the main plugin class.
 	}
 
 	/**
@@ -26,15 +26,15 @@ class Typography_Controls {
 	 * Note: Assets are now handled by the main plugin class to avoid conflicts
 	 */
 	public function enqueue_typography_controls() {
-		// Assets are now enqueued by the main plugin class
-		// This method is kept for compatibility but doesn't enqueue anything
+		// Assets are now enqueued by the main plugin class.
+		// This method is kept for compatibility but doesn't enqueue anything.
 	}
 
 	/**
 	 * Add typography panel to blocks
 	 */
 	public function add_typography_panel() {
-		// This will be handled by JavaScript to add the panel to the block inspector
+		// This will be handled by JavaScript to add the panel to the block inspector.
 	}
 
 	/**
@@ -44,12 +44,12 @@ class Typography_Controls {
 	 */
 	private function get_default_typography_values() {
 		return array(
-			'lineHeight' => array(
-				'min' => 0.5,
-				'max' => 3.0,
-				'step' => 0.1,
+			'lineHeight'    => array(
+				'min'     => 0.5,
+				'max'     => 3.0,
+				'step'    => 0.1,
 				'default' => 1.5,
-				'units' => array(
+				'units'   => array(
 					array(
 						'value' => '',
 						'label' => __( 'Unitless', 'forjeon' ),
@@ -65,11 +65,11 @@ class Typography_Controls {
 				),
 			),
 			'letterSpacing' => array(
-				'min' => -0.1,
-				'max' => 0.5,
-				'step' => 0.01,
+				'min'     => -0.1,
+				'max'     => 0.5,
+				'step'    => 0.01,
 				'default' => 0,
-				'units' => array(
+				'units'   => array(
 					array(
 						'value' => 'em',
 						'label' => 'em',
@@ -80,23 +80,23 @@ class Typography_Controls {
 					),
 				),
 			),
-			'textShadow' => array(
-				'x' => array(
-					'min' => -10,
-					'max' => 10,
-					'step' => 1,
+			'textShadow'    => array(
+				'x'     => array(
+					'min'     => -10,
+					'max'     => 10,
+					'step'    => 1,
 					'default' => 0,
 				),
-				'y' => array(
-					'min' => -10,
-					'max' => 10,
-					'step' => 1,
+				'y'     => array(
+					'min'     => -10,
+					'max'     => 10,
+					'step'    => 1,
 					'default' => 2,
 				),
-				'blur' => array(
-					'min' => 0,
-					'max' => 20,
-					'step' => 1,
+				'blur'  => array(
+					'min'     => 0,
+					'max'     => 20,
+					'step'    => 1,
 					'default' => 3,
 				),
 				'color' => '#000000',
@@ -114,27 +114,27 @@ class Typography_Controls {
 			'subtle' => array(
 				'label' => __( 'Subtle', 'forjeon' ),
 				'value' => array(
-					'x' => 0,
-					'y' => 1,
-					'blur' => 2,
+					'x'     => 0,
+					'y'     => 1,
+					'blur'  => 2,
 					'color' => 'rgba(0, 0, 0, 0.1)',
 				),
 			),
 			'medium' => array(
 				'label' => __( 'Medium', 'forjeon' ),
 				'value' => array(
-					'x' => 0,
-					'y' => 2,
-					'blur' => 4,
+					'x'     => 0,
+					'y'     => 2,
+					'blur'  => 4,
 					'color' => 'rgba(0, 0, 0, 0.3)',
 				),
 			),
 			'strong' => array(
 				'label' => __( 'Strong', 'forjeon' ),
 				'value' => array(
-					'x' => 0,
-					'y' => 3,
-					'blur' => 6,
+					'x'     => 0,
+					'y'     => 3,
+					'blur'  => 6,
 					'color' => 'rgba(0, 0, 0, 0.5)',
 				),
 			),
@@ -149,19 +149,19 @@ class Typography_Controls {
 	 */
 	public function validate_typography_values( $values ) {
 		$validated = array();
-		$defaults = $this->get_default_typography_values();
+		$defaults  = $this->get_default_typography_values();
 
-		// Validate line height
+		// Validate line height.
 		if ( isset( $values['lineHeight'] ) ) {
 			$line_height = $values['lineHeight'];
 			if ( is_array( $line_height ) && isset( $line_height['value'], $line_height['unit'] ) ) {
 				$value = floatval( $line_height['value'] );
-				$unit = $line_height['unit'];
-				
-				// Check if unit is valid
+				$unit  = $line_height['unit'];
+
+				// Check if unit is valid.
 				$valid_units = wp_list_pluck( $defaults['lineHeight']['units'], 'value' );
 				if ( in_array( $unit, $valid_units, true ) ) {
-					// Validate value range
+					// Validate value range.
 					if ( $value >= $defaults['lineHeight']['min'] && $value <= $defaults['lineHeight']['max'] ) {
 						$validated['lineHeight'] = $line_height;
 					}
@@ -169,17 +169,17 @@ class Typography_Controls {
 			}
 		}
 
-		// Validate letter spacing
+		// Validate letter spacing.
 		if ( isset( $values['letterSpacing'] ) ) {
 			$letter_spacing = $values['letterSpacing'];
 			if ( is_array( $letter_spacing ) && isset( $letter_spacing['value'], $letter_spacing['unit'] ) ) {
 				$value = floatval( $letter_spacing['value'] );
-				$unit = $letter_spacing['unit'];
-				
-				// Check if unit is valid
+				$unit  = $letter_spacing['unit'];
+
+				// Check if unit is valid.
 				$valid_units = wp_list_pluck( $defaults['letterSpacing']['units'], 'value' );
 				if ( in_array( $unit, $valid_units, true ) ) {
-					// Validate value range
+					// Validate value range.
 					if ( $value >= $defaults['letterSpacing']['min'] && $value <= $defaults['letterSpacing']['max'] ) {
 						$validated['letterSpacing'] = $letter_spacing;
 					}
@@ -187,13 +187,13 @@ class Typography_Controls {
 			}
 		}
 
-		// Validate text shadow
+		// Validate text shadow.
 		if ( isset( $values['textShadow'] ) ) {
 			$text_shadow = $values['textShadow'];
 			if ( is_array( $text_shadow ) ) {
 				$valid_shadow = array();
-				
-				// Validate X offset
+
+				// Validate X offset.
 				if ( isset( $text_shadow['x'] ) ) {
 					$x = intval( $text_shadow['x'] );
 					if ( $x >= $defaults['textShadow']['x']['min'] && $x <= $defaults['textShadow']['x']['max'] ) {
@@ -201,7 +201,7 @@ class Typography_Controls {
 					}
 				}
 
-				// Validate Y offset
+				// Validate Y offset.
 				if ( isset( $text_shadow['y'] ) ) {
 					$y = intval( $text_shadow['y'] );
 					if ( $y >= $defaults['textShadow']['y']['min'] && $y <= $defaults['textShadow']['y']['max'] ) {
@@ -209,7 +209,7 @@ class Typography_Controls {
 					}
 				}
 
-				// Validate blur radius
+				// Validate blur radius.
 				if ( isset( $text_shadow['blur'] ) ) {
 					$blur = intval( $text_shadow['blur'] );
 					if ( $blur >= $defaults['textShadow']['blur']['min'] && $blur <= $defaults['textShadow']['blur']['max'] ) {
@@ -217,7 +217,7 @@ class Typography_Controls {
 					}
 				}
 
-				// Validate color
+				// Validate color.
 				if ( isset( $text_shadow['color'] ) ) {
 					$color = sanitize_hex_color( $text_shadow['color'] );
 					if ( $color ) {
@@ -225,7 +225,7 @@ class Typography_Controls {
 					}
 				}
 
-				// Only add if we have valid shadow values
+				// Only add if we have valid shadow values.
 				if ( count( $valid_shadow ) >= 3 ) {
 					$validated['textShadow'] = $valid_shadow;
 				}
@@ -244,12 +244,12 @@ class Typography_Controls {
 	public function get_block_typography_settings( $block_name ) {
 		$settings = array();
 
-		// Check if block supports typography controls
+		// Check if block supports typography controls.
 		if ( $this->block_supports_typography( $block_name ) ) {
 			$settings = array(
-				'lineHeight' => true,
+				'lineHeight'    => true,
 				'letterSpacing' => true,
-				'textShadow' => true,
+				'textShadow'    => true,
 			);
 		}
 
@@ -286,44 +286,44 @@ class Typography_Controls {
 	public function get_typography_css( $attributes ) {
 		$css = '';
 
-		// Line height
+		// Line height.
 		if ( ! empty( $attributes['lineHeight'] ) ) {
 			$line_height = $attributes['lineHeight'];
 			if ( is_array( $line_height ) && isset( $line_height['value'], $line_height['unit'] ) ) {
 				$value = $line_height['value'];
-				$unit = $line_height['unit'];
-				$css .= "line-height: {$value}{$unit};";
+				$unit  = $line_height['unit'];
+				$css  .= "line-height: {$value}{$unit};";
 			}
 		}
 
-		// Letter spacing
+		// Letter spacing.
 		if ( ! empty( $attributes['letterSpacing'] ) ) {
 			$letter_spacing = $attributes['letterSpacing'];
 			if ( is_array( $letter_spacing ) && isset( $letter_spacing['value'], $letter_spacing['unit'] ) ) {
 				$value = $letter_spacing['value'];
-				$unit = $letter_spacing['unit'];
-				$css .= "letter-spacing: {$value}{$unit};";
+				$unit  = $letter_spacing['unit'];
+				$css  .= "letter-spacing: {$value}{$unit};";
 			}
 		}
 
-		// Text shadow
+		// Text shadow.
 		if ( ! empty( $attributes['textShadow'] ) ) {
 			$text_shadow = $attributes['textShadow'];
 			if ( is_array( $text_shadow ) ) {
 				$shadow_parts = array();
-				
+
 				if ( isset( $text_shadow['x'] ) ) {
 					$shadow_parts[] = $text_shadow['x'] . 'px';
 				}
-				
+
 				if ( isset( $text_shadow['y'] ) ) {
 					$shadow_parts[] = $text_shadow['y'] . 'px';
 				}
-				
+
 				if ( isset( $text_shadow['blur'] ) ) {
 					$shadow_parts[] = $text_shadow['blur'] . 'px';
 				}
-				
+
 				if ( isset( $text_shadow['color'] ) ) {
 					$shadow_parts[] = $text_shadow['color'];
 				}
